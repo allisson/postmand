@@ -30,3 +30,10 @@ type DeliveryRepository interface {
 	Update(delivery *Delivery) error
 	Delete(id ID) error
 }
+
+// DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.
+type DeliveryAttemptRepository interface {
+	Get(getOptions *RepositoryGetOptions) (*DeliveryAttempt, error)
+	List(listOptions *RepositoryListOptions) ([]*DeliveryAttempt, error)
+	Create(deliveryAttempt *DeliveryAttempt) error
+}

@@ -38,3 +38,25 @@ CREATE INDEX IF NOT EXISTS deliveries_webhook_id_idx ON deliveries (webhook_id);
 CREATE INDEX IF NOT EXISTS deliveries_status_idx ON deliveries (status);
 CREATE INDEX IF NOT EXISTS deliveries_scheduled_at_idx ON deliveries USING BRIN(scheduled_at);
 CREATE INDEX IF NOT EXISTS deliveries_created_at_idx ON deliveries USING BRIN(created_at);
+
+-- delivery_attempts table
+
+CREATE TABLE IF NOT EXISTS delivery_attempts(
+   id UUID PRIMARY KEY,
+   webhook_id UUID NOT NULL,
+   delivery_id UUID NOT NULL,
+   response_headers TEXT NOT NULL,
+   response_body TEXT NOT NULL,
+   response_status_code SMALLINT NOT NULL,
+   execution_duration SMALLINT NOT NULL,
+   success BOOLEAN NOT NULL,
+   error TEXT NOT NULL,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   FOREIGN KEY (webhook_id) REFERENCES webhooks (id) ON DELETE CASCADE,
+   FOREIGN KEY (delivery_id) REFERENCES deliveries (id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS delivery_attempts_webhook_id_idx ON delivery_attempts (webhook_id);
+CREATE INDEX IF NOT EXISTS delivery_attempts_delivery_id_idx ON delivery_attempts (delivery_id);
+CREATE INDEX IF NOT EXISTS delivery_attempts_success_idx ON delivery_attempts (success);
+CREATE INDEX IF NOT EXISTS delivery_attempts_created_at_idx ON delivery_attempts USING BRIN(created_at);
