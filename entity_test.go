@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
+	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -19,21 +21,21 @@ func TestWebhook(t *testing.T) {
 		{
 			"required fields",
 			Webhook{},
-			`{"content_type":"cannot be blank","delivery_attempt_timeout":"cannot be blank","id":"must be a valid UUID v4","max_delivery_attempts":"cannot be blank","name":"cannot be blank","retry_max_backoff":"cannot be blank","retry_min_backoff":"cannot be blank","url":"cannot be blank"}`,
+			`{"content_type":"cannot be blank","delivery_attempt_timeout":"cannot be blank","id":"must be a valid UUID v4","max_delivery_attempts":"cannot be blank","name":"cannot be blank","retry_max_backoff":"cannot be blank","retry_min_backoff":"cannot be blank","url":"cannot be blank","valid_status_codes":"cannot be blank"}`,
 		},
 		{
 			"Short name",
-			Webhook{ID: uuid.New(), Name: "A", URL: "https://httpbin.org/post", ContentType: "application/json", MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
+			Webhook{ID: uuid.New(), Name: "A", URL: "https://httpbin.org/post", ContentType: "application/json", ValidStatusCodes: pq.Int32Array{200, 201}, MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
 			`{"name":"the length must be between 3 and 255"}`,
 		},
 		{
 			"Long name",
-			Webhook{ID: uuid.New(), Name: strings.Repeat("A", 300), URL: "https://httpbin.org/post", ContentType: "application/json", MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
+			Webhook{ID: uuid.New(), Name: strings.Repeat("A", 300), URL: "https://httpbin.org/post", ContentType: "application/json", ValidStatusCodes: pq.Int32Array{200, 201}, MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
 			`{"name":"the length must be between 3 and 255"}`,
 		},
 		{
 			"Content type invalid option",
-			Webhook{ID: uuid.New(), Name: "AAA", URL: "https://httpbin.org/post", ContentType: "text/html", MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
+			Webhook{ID: uuid.New(), Name: "AAA", URL: "https://httpbin.org/post", ContentType: "text/html", ValidStatusCodes: pq.Int32Array{200, 201}, MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
 			`{"content_type":"must be a valid value"}`,
 		},
 	}
@@ -47,7 +49,17 @@ func TestWebhook(t *testing.T) {
 		})
 	}
 
-	webhook := Webhook{ID: uuid.New(), Name: "AAA", URL: "https://httpbin.org/post", ContentType: "application/json", MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1}
+	webhook := Webhook{
+		ID:                     uuid.New(),
+		Name:                   "AAA",
+		URL:                    "https://httpbin.org/post",
+		ContentType:            "application/json",
+		ValidStatusCodes:       pq.Int32Array{200, 201},
+		MaxDeliveryAttempts:    1,
+		DeliveryAttemptTimeout: 1,
+		RetryMinBackoff:        1,
+		RetryMaxBackoff:        1,
+	}
 	err := webhook.Validate()
 	assert.Nil(t, err)
 }
@@ -84,7 +96,7 @@ func TestDelivery(t *testing.T) {
 		WebhookID:   uuid.New(),
 		Payload:     `{"success": true}`,
 		ScheduledAt: time.Now().UTC(),
-		Status:      "pending",
+		Status:      "todo",
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 	}

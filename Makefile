@@ -10,4 +10,13 @@ lint:
 test:
 	go test -covermode=count -coverprofile=count.out -v ./...
 
-.PHONY: lint test
+download-golang-migrate-binary:
+	if [ ! -f ./migrate.$(PLATFORM)-amd64 ] ; \
+	then \
+		curl -sfL https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.$(PLATFORM)-amd64.tar.gz | tar -xvz; \
+	fi;
+
+db-migrate: download-golang-migrate-binary
+	./migrate.$(PLATFORM)-amd64 -source file://db/migrations -database ${POSTMAND_DATABASE_URL} up
+
+.PHONY: lint test download-golang-migrate-binary db-migrate
