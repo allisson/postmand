@@ -17,15 +17,17 @@ func init() {
 }
 
 type testHelper struct {
-	db                *sqlx.DB
-	webhookRepository *Webhook
+	db                 *sqlx.DB
+	webhookRepository  *Webhook
+	deliveryRepository *Delivery
 }
 
 func newTestHelper() testHelper {
 	cName := fmt.Sprintf("connection_%d", time.Now().UnixNano())
 	db, _ := sqlx.Open("pgx", cName)
 	return testHelper{
-		db:                db,
-		webhookRepository: NewWebhook(db),
+		db:                 db,
+		webhookRepository:  NewWebhook(db),
+		deliveryRepository: NewDelivery(db),
 	}
 }

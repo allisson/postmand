@@ -40,7 +40,7 @@ func (w Webhook) List(listOptions *postmand.RepositoryListOptions) ([]*postmand.
 	return webhooks, err
 }
 
-// Create webhook on database.
+// Create postmand.Webhook on database.
 func (w Webhook) Create(webhook *postmand.Webhook) error {
 	sqlStatement := `
 		INSERT INTO webhooks (
@@ -78,7 +78,7 @@ func (w Webhook) Create(webhook *postmand.Webhook) error {
 	return err
 }
 
-// Update webhook on database.
+// Update postmand.Webhook on database.
 func (w Webhook) Update(webhook *postmand.Webhook) error {
 	sqlStatement := `
 		UPDATE webhooks
@@ -100,7 +100,7 @@ func (w Webhook) Update(webhook *postmand.Webhook) error {
 	return err
 }
 
-// Delete webhook on database.
+// Delete postmand.Webhook on database.
 func (w Webhook) Delete(id postmand.ID) error {
 	sqlStatement := `
 		DELETE FROM webhooks WHERE id = $1
@@ -109,7 +109,7 @@ func (w Webhook) Delete(id postmand.ID) error {
 	return err
 }
 
-// NewWebhook returns Webhook with db connection.
+// NewWebhook returns postmand.Webhook with db connection.
 func NewWebhook(db *sqlx.DB) *Webhook {
 	return &Webhook{db: db}
 }

@@ -82,7 +82,7 @@ func TestTransaction(t *testing.T) {
 		assert.Equal(t, webhook.ID, webhookFromRepository.ID)
 	})
 
-	t.Run("List webhook", func(t *testing.T) {
+	t.Run("List webhooks", func(t *testing.T) {
 		th := newTestHelper()
 		defer th.db.Close()
 
