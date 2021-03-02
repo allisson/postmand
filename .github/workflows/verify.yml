@@ -10,6 +10,20 @@ jobs:
   verify:
     name: Test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_DB: postmand
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Set up Go 1.16
         uses: actions/setup-go@v2
@@ -38,4 +52,6 @@ jobs:
           args: -E gosec
 
       - name: Run Tests
-        run: go test -covermode=count -coverprofile=count.out -v ./...
+        env:
+          POSTMAND_DATABASE_URL: "postgres://test:test@localhost:5432/postmand?sslmode=disable"
+        run: make db-migrate && go test -covermode=count -coverprofile=count.out -v ./...
