@@ -80,7 +80,7 @@ func (d Delivery) Validate() error {
 // DeliveryAttempt represents a delivery attempt.
 type DeliveryAttempt struct {
 	ID                 ID        `json:"id" db:"id"`
-	WebhookID          ID        `json:"destination_id" db:"destination_id"`
+	WebhookID          ID        `json:"webhook_id" db:"webhook_id"`
 	DeliveryID         ID        `json:"delivery_id" db:"delivery_id"`
 	ResponseHeaders    string    `json:"response_headers" db:"response_headers"`
 	ResponseBody       string    `json:"response_body" db:"response_body"`
