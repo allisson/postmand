@@ -125,7 +125,7 @@ func (d Delivery) Dispatch() (*postmand.DispatchResult, error) {
 		INNER JOIN webhooks
 			ON deliveries.webhook_id = webhooks.id
 		WHERE
-			webhooks.active = true AND deliveries.status = 'pending' AND deliveries.scheduled_at <= now()
+			webhooks.active = true AND deliveries.status = $1 AND deliveries.scheduled_at <= $2
 		ORDER BY
 			deliveries.created_at ASC
 		FOR UPDATE SKIP LOCKED
@@ -141,7 +141,7 @@ func (d Delivery) Dispatch() (*postmand.DispatchResult, error) {
 
 	// Get delivery
 	delivery := postmand.Delivery{}
-	err = tx.Get(&delivery, sqlStatement)
+	err = tx.Get(&delivery, sqlStatement, postmand.DeliveryStatusPending, time.Now().UTC())
 	if err != nil {
 		// Skip if no result
 		if err == sql.ErrNoRows {
