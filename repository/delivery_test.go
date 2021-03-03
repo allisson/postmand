@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"net/http"
 	"net/http/httptest"
@@ -77,17 +78,19 @@ func TestDispatchToURL(t *testing.T) {
 }
 
 func TestDelivery(t *testing.T) {
+	ctx := context.Background()
+
 	t.Run("Create delivery", func(t *testing.T) {
 		th := newTestHelper()
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 	})
 
@@ -96,20 +99,20 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
 		delivery.Status = postmand.DeliveryStatusPending
-		err = th.deliveryRepository.Update(&delivery)
+		err = th.deliveryRepository.Update(ctx, &delivery)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, postmand.DeliveryStatusPending, deliveryFromRepository.Status)
 	})
@@ -119,19 +122,19 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Delete(delivery.ID)
+		err = th.deliveryRepository.Delete(ctx, delivery.ID)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		_, err = th.deliveryRepository.Get(options)
+		_, err = th.deliveryRepository.Get(ctx, options)
 		assert.Equal(t, sql.ErrNoRows, err)
 	})
 
@@ -140,16 +143,16 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, delivery.ID, deliveryFromRepository.ID)
 	})
@@ -159,21 +162,21 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery1 := makeDelivery()
 		delivery1.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery1)
+		err = th.deliveryRepository.Create(ctx, &delivery1)
 		assert.Nil(t, err)
 
 		delivery2 := makeDelivery()
 		delivery2.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery2)
+		err = th.deliveryRepository.Create(ctx, &delivery2)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryListOptions{Limit: 1, Offset: 0, OrderBy: "created_at", Order: "DESC"}
-		deliveries, err := th.deliveryRepository.List(options)
+		deliveries, err := th.deliveryRepository.List(ctx, options)
 		assert.Nil(t, err)
 		assert.Len(t, deliveries, 1)
 		assert.Equal(t, delivery2.ID, deliveries[0].ID)
@@ -191,25 +194,25 @@ func TestDelivery(t *testing.T) {
 
 		webhook := makeWebhook()
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
 		assert.Equal(t, postmand.DeliveryStatusSucceeded, deliveryFromRepository.Status)
 
 		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
+		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.True(t, deliveryAttemptFromRepository.Success)
 	})
@@ -228,26 +231,26 @@ func TestDelivery(t *testing.T) {
 		webhook := makeWebhook()
 		webhook.MaxDeliveryAttempts = 2
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
 		assert.Equal(t, postmand.DeliveryStatusPending, deliveryFromRepository.Status)
 		assert.True(t, deliveryFromRepository.ScheduledAt.After(delivery.ScheduledAt))
 
 		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
+		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.False(t, deliveryAttemptFromRepository.Success)
 	})
@@ -265,25 +268,25 @@ func TestDelivery(t *testing.T) {
 
 		webhook := makeWebhook()
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(&delivery)
+		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
 		assert.Equal(t, postmand.DeliveryStatusFailed, deliveryFromRepository.Status)
 
 		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
+		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.False(t, deliveryAttemptFromRepository.Success)
 	})

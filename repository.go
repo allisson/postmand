@@ -1,5 +1,7 @@
 package postmand
 
+import "context"
+
 // RepositoryGetOptions contains options used in the Get methods.
 type RepositoryGetOptions struct {
 	Filters map[string]interface{}
@@ -16,26 +18,26 @@ type RepositoryListOptions struct {
 
 // WebhookRepository is the interface that will be used to iterate with the Webhook data.
 type WebhookRepository interface {
-	Get(getOptions RepositoryGetOptions) (*Webhook, error)
-	List(listOptions RepositoryListOptions) ([]*Webhook, error)
-	Create(webhook *Webhook) error
-	Update(webhook *Webhook) error
-	Delete(id ID) error
+	Get(ctx context.Context, getOptions RepositoryGetOptions) (*Webhook, error)
+	List(ctx context.Context, listOptions RepositoryListOptions) ([]*Webhook, error)
+	Create(ctx context.Context, webhook *Webhook) error
+	Update(ctx context.Context, webhook *Webhook) error
+	Delete(ctx context.Context, id ID) error
 }
 
 // DeliveryRepository is the interface that will be used to iterate with the Delivery data.
 type DeliveryRepository interface {
-	Get(getOptions RepositoryGetOptions) (*Delivery, error)
-	List(listOptions RepositoryListOptions) ([]*Delivery, error)
-	Create(delivery *Delivery) error
-	Update(delivery *Delivery) error
-	Delete(id ID) error
-	Dispatch() error
+	Get(ctx context.Context, getOptions RepositoryGetOptions) (*Delivery, error)
+	List(ctx context.Context, listOptions RepositoryListOptions) ([]*Delivery, error)
+	Create(ctx context.Context, delivery *Delivery) error
+	Update(ctx context.Context, delivery *Delivery) error
+	Delete(ctx context.Context, id ID) error
+	Dispatch(ctx context.Context) error
 }
 
 // DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.
 type DeliveryAttemptRepository interface {
-	Get(getOptions RepositoryGetOptions) (*DeliveryAttempt, error)
-	List(listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
-	Create(deliveryAttempt *DeliveryAttempt) error
+	Get(ctx context.Context, getOptions RepositoryGetOptions) (*DeliveryAttempt, error)
+	List(ctx context.Context, listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
+	Create(ctx context.Context, deliveryAttempt *DeliveryAttempt) error
 }
