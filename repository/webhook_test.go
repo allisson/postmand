@@ -47,7 +47,7 @@ func TestTransaction(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		webhookFromRepository, err := th.webhookRepository.Get(&options)
+		webhookFromRepository, err := th.webhookRepository.Get(options)
 		assert.Nil(t, err)
 		assert.Equal(t, pq.Int32Array{200, 201, 204}, webhookFromRepository.ValidStatusCodes)
 	})
@@ -64,7 +64,7 @@ func TestTransaction(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		_, err = th.webhookRepository.Get(&options)
+		_, err = th.webhookRepository.Get(options)
 		assert.Equal(t, sql.ErrNoRows, err)
 	})
 
@@ -77,7 +77,7 @@ func TestTransaction(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		webhookFromRepository, err := th.webhookRepository.Get(&options)
+		webhookFromRepository, err := th.webhookRepository.Get(options)
 		assert.Nil(t, err)
 		assert.Equal(t, webhook.ID, webhookFromRepository.ID)
 	})
@@ -95,7 +95,7 @@ func TestTransaction(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
-		webhooks, err := th.webhookRepository.List(&options)
+		webhooks, err := th.webhookRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, webhooks, 1)
 		assert.Equal(t, webhook2.ID, webhooks[0].ID)
