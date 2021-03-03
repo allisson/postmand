@@ -53,10 +53,3 @@ func rollback(msg string, tx *sqlx.Tx) {
 		log.Printf("%s: unable to rollback: %v\n", msg, err)
 	}
 }
-
-func commit(msg string, tx *sqlx.Tx) {
-	if err := tx.Commit(); err != nil {
-		log.Printf("%s: unable to commit: %v\n", msg, err)
-		rollback(msg, tx)
-	}
-}

@@ -212,7 +212,11 @@ func (d Delivery) Dispatch() error {
 		return err
 	}
 
-	commit("dispatch", tx)
+	if err := tx.Commit(); err != nil {
+		rollback("unable to commit", tx)
+		return err
+	}
+
 	return nil
 }
 
