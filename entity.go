@@ -87,9 +87,3 @@ type DeliveryAttempt struct {
 	Error              string    `json:"error" db:"error"`
 	CreatedAt          time.Time `json:"created_at" db:"created_at"`
 }
-
-// DispatchResult represents the result of a webhook dispatch.
-type DispatchResult struct {
-	Delivery        Delivery
-	DeliveryAttempt DeliveryAttempt
-}
