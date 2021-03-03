@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/allisson/postmand"
 	"github.com/huandu/go-sqlbuilder"
+	"github.com/jmoiron/sqlx"
 )
 
 func getQuery(tableName string, getOptions postmand.RepositoryGetOptions) (string, []interface{}) {
@@ -36,4 +39,10 @@ func updateQuery(tableName string, structValue interface{}) (string, []interface
 	theStruct := sqlbuilder.NewStruct(structValue).For(sqlbuilder.PostgreSQL)
 	ib := theStruct.Update(tableName, structValue)
 	return ib.Build()
+}
+
+func rollback(msg string, tx *sqlx.Tx) {
+	if rollbackErr := tx.Rollback(); rollbackErr != nil {
+		log.Printf("%s: unable to rollback: %v\n", msg, rollbackErr)
+	}
 }

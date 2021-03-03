@@ -96,7 +96,7 @@ func TestDelivery(t *testing.T) {
 		WebhookID:   uuid.New(),
 		Payload:     `{"success": true}`,
 		ScheduledAt: time.Now().UTC(),
-		Status:      "todo",
+		Status:      DeliveryStatusPending,
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 	}

@@ -16,6 +16,7 @@ func makeWebhook() *postmand.Webhook {
 		Name:                   "Test",
 		URL:                    "https://httpbin.org/post",
 		ContentType:            "application/json",
+		Active:                 true,
 		ValidStatusCodes:       pq.Int32Array{200, 201},
 		MaxDeliveryAttempts:    1,
 		DeliveryAttemptTimeout: 1,

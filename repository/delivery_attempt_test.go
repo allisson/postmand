@@ -11,8 +11,6 @@ import (
 func makeDeliveryAttempt() *postmand.DeliveryAttempt {
 	return &postmand.DeliveryAttempt{
 		ID:                 uuid.New(),
-		ResponseHeaders:    `{"Content-Type": ["application/json; charset=utf-8"]}`,
-		ResponseBody:       `{"message":"A requisição para registrar essa transação foi enviada."}`,
 		ResponseStatusCode: 201,
 		ExecutionDuration:  150,
 		Success:            true,
