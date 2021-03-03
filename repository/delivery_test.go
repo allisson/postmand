@@ -12,13 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func makeDelivery() *postmand.Delivery {
-	return &postmand.Delivery{
+func makeDelivery() postmand.Delivery {
+	return postmand.Delivery{
 		ID:               uuid.New(),
 		Payload:          `{"success": true}`,
 		ScheduledAt:      time.Now().UTC(),
 		DeliveryAttempts: 0,
 		Status:           postmand.DeliveryStatusPending,
+		CreatedAt:        time.Now().UTC(),
+		UpdatedAt:        time.Now().UTC(),
 	}
 }
 
@@ -29,7 +31,7 @@ func TestDispatchToURL(t *testing.T) {
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
 
-		dr := dispatchToURL(webhook, delivery)
+		dr := dispatchToURL(&webhook, &delivery)
 		assert.False(t, dr.Success)
 		assert.Equal(t, `Post "http://localhost:9999": dial tcp [::1]:9999: connect: connection refused`, dr.Error)
 	})
@@ -47,7 +49,7 @@ func TestDispatchToURL(t *testing.T) {
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
 
-		dr := dispatchToURL(webhook, delivery)
+		dr := dispatchToURL(&webhook, &delivery)
 		assert.NotEqual(t, "", dr.RawResponse)
 		assert.Equal(t, http.StatusNoContent, dr.ResponseStatusCode)
 		assert.False(t, dr.Success)
@@ -66,7 +68,7 @@ func TestDispatchToURL(t *testing.T) {
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
 
-		dr := dispatchToURL(webhook, delivery)
+		dr := dispatchToURL(&webhook, &delivery)
 		assert.NotEqual(t, "", dr.RawResponse)
 		assert.Equal(t, http.StatusOK, dr.ResponseStatusCode)
 		assert.True(t, dr.Success)
@@ -80,12 +82,12 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 	})
 
@@ -94,16 +96,16 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		delivery.Status = postmand.DeliveryStatusPending
-		err = th.deliveryRepository.Update(delivery)
+		err = th.deliveryRepository.Update(&delivery)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
@@ -117,12 +119,12 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		err = th.deliveryRepository.Delete(delivery.ID)
@@ -138,12 +140,12 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
@@ -157,20 +159,20 @@ func TestDelivery(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery1 := makeDelivery()
 		delivery1.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery1)
+		err = th.deliveryRepository.Create(&delivery1)
 		assert.Nil(t, err)
 
 		delivery2 := makeDelivery()
 		delivery2.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery2)
+		err = th.deliveryRepository.Create(&delivery2)
 		assert.Nil(t, err)
 
-		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
+		options := postmand.RepositoryListOptions{Limit: 1, Offset: 0, OrderBy: "created_at", Order: "DESC"}
 		deliveries, err := th.deliveryRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, deliveries, 1)
@@ -189,12 +191,12 @@ func TestDelivery(t *testing.T) {
 
 		webhook := makeWebhook()
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		err = th.deliveryRepository.Dispatch()
@@ -226,12 +228,12 @@ func TestDelivery(t *testing.T) {
 		webhook := makeWebhook()
 		webhook.MaxDeliveryAttempts = 2
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		err = th.deliveryRepository.Dispatch()
@@ -263,12 +265,12 @@ func TestDelivery(t *testing.T) {
 
 		webhook := makeWebhook()
 		webhook.URL = httpServer.URL
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		err = th.deliveryRepository.Dispatch()

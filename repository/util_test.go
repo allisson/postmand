@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	txdb.Register("pgx", "postgres", os.Getenv("POSTMAND_DATABASE_URL"))
+	txdb.Register("pgx", "postgres", os.Getenv("POSTMAND_TEST_DATABASE_URL"))
 	rand.Seed(time.Now().UnixNano())
 }
 

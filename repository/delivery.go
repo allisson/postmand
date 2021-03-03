@@ -99,7 +99,7 @@ func (d Delivery) Create(delivery *postmand.Delivery) error {
 
 // Update postmand.Delivery on database.
 func (d Delivery) Update(delivery *postmand.Delivery) error {
-	sql, args := updateQuery("deliveries", delivery)
+	sql, args := updateQuery("deliveries", delivery.ID, delivery)
 	_, err := d.db.Exec(sql, args...)
 	return err
 }
@@ -143,7 +143,8 @@ func (d Delivery) Dispatch() error {
 	if err != nil {
 		// Skip if no result
 		if err == sql.ErrNoRows {
-			return tx.Commit()
+			rollback("delivery not found", tx)
+			return nil
 		}
 		rollback("get delivery", tx)
 		return err
@@ -184,7 +185,8 @@ func (d Delivery) Dispatch() error {
 	delivery.DeliveryAttempts = newDeliveryAttempts
 	delivery.Status = newStatus
 	delivery.ScheduledAt = newScheduledAt
-	sql, args = updateQuery("deliveries", delivery)
+	delivery.UpdatedAt = time.Now().UTC()
+	sql, args = updateQuery("deliveries", delivery.ID, delivery)
 	_, err = tx.Exec(sql, args...)
 	if err != nil {
 		rollback("update delivery", tx)
@@ -201,6 +203,7 @@ func (d Delivery) Dispatch() error {
 		ExecutionDuration:  dr.ExecutionDuration,
 		Success:            dr.Success,
 		Error:              dr.Error,
+		CreatedAt:          time.Now().UTC(),
 	}
 	sql, args = insertQuery("delivery_attempts", deliveryAttempt)
 	_, err = tx.Exec(sql, args...)
@@ -209,7 +212,8 @@ func (d Delivery) Dispatch() error {
 		return err
 	}
 
-	return tx.Commit()
+	commit("dispatch", tx)
+	return nil
 }
 
 // NewDelivery returns postmand.Delivery with db connection.

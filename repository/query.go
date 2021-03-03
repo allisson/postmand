@@ -23,8 +23,14 @@ func listQuery(tableName string, listOptions postmand.RepositoryListOptions) (st
 	for key, value := range listOptions.Filters {
 		sb.Where(sb.Equal(key, value))
 	}
-	if listOptions.OrderBy != "" {
+	if listOptions.OrderBy != "" && listOptions.Order != "" {
 		sb.OrderBy(listOptions.OrderBy)
+		switch listOptions.Order {
+		case "asc", "ASC":
+			sb.Asc()
+		case "desc", "DESC":
+			sb.Desc()
+		}
 	}
 	return sb.Build()
 }
@@ -35,14 +41,22 @@ func insertQuery(tableName string, structValue interface{}) (string, []interface
 	return ib.Build()
 }
 
-func updateQuery(tableName string, structValue interface{}) (string, []interface{}) {
+func updateQuery(tableName string, id postmand.ID, structValue interface{}) (string, []interface{}) {
 	theStruct := sqlbuilder.NewStruct(structValue).For(sqlbuilder.PostgreSQL)
 	ib := theStruct.Update(tableName, structValue)
+	ib.Where(ib.Equal("id", id))
 	return ib.Build()
 }
 
 func rollback(msg string, tx *sqlx.Tx) {
-	if rollbackErr := tx.Rollback(); rollbackErr != nil {
-		log.Printf("%s: unable to rollback: %v\n", msg, rollbackErr)
+	if err := tx.Rollback(); err != nil {
+		log.Printf("%s: unable to rollback: %v\n", msg, err)
+	}
+}
+
+func commit(msg string, tx *sqlx.Tx) {
+	if err := tx.Commit(); err != nil {
+		log.Printf("%s: unable to commit: %v\n", msg, err)
+		rollback(msg, tx)
 	}
 }
