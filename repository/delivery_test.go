@@ -199,19 +199,11 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		dispatchResult, err := th.deliveryRepository.Dispatch()
 		assert.Nil(t, err)
-
-		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
-		assert.Equal(t, postmand.DeliveryStatusSucceeded, deliveryFromRepository.Status)
-
-		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
-		assert.Nil(t, err)
-		assert.True(t, deliveryAttemptFromRepository.Success)
+		assert.Equal(t, 1, dispatchResult.Delivery.DeliveryAttempts)
+		assert.Equal(t, postmand.DeliveryStatusSucceeded, dispatchResult.Delivery.Status)
+		assert.True(t, dispatchResult.DeliveryAttempt.Success)
 	})
 
 	t.Run("Dispatch delivery retry", func(t *testing.T) {
@@ -236,20 +228,12 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		dispatchResult, err := th.deliveryRepository.Dispatch()
 		assert.Nil(t, err)
-
-		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
-		assert.Equal(t, postmand.DeliveryStatusPending, deliveryFromRepository.Status)
-		assert.True(t, deliveryFromRepository.ScheduledAt.After(delivery.ScheduledAt))
-
-		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
-		assert.Nil(t, err)
-		assert.False(t, deliveryAttemptFromRepository.Success)
+		assert.Equal(t, 1, dispatchResult.Delivery.DeliveryAttempts)
+		assert.Equal(t, postmand.DeliveryStatusPending, dispatchResult.Delivery.Status)
+		assert.True(t, dispatchResult.Delivery.ScheduledAt.After(delivery.ScheduledAt))
+		assert.False(t, dispatchResult.DeliveryAttempt.Success)
 	})
 
 	t.Run("Dispatch delivery failed", func(t *testing.T) {
@@ -273,18 +257,10 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch()
+		dispatchResult, err := th.deliveryRepository.Dispatch()
 		assert.Nil(t, err)
-
-		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(options)
-		assert.Nil(t, err)
-		assert.Equal(t, 1, deliveryFromRepository.DeliveryAttempts)
-		assert.Equal(t, postmand.DeliveryStatusFailed, deliveryFromRepository.Status)
-
-		options = postmand.RepositoryGetOptions{Filters: map[string]interface{}{"delivery_id": delivery.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
-		assert.Nil(t, err)
-		assert.False(t, deliveryAttemptFromRepository.Success)
+		assert.Equal(t, 1, dispatchResult.Delivery.DeliveryAttempts)
+		assert.Equal(t, postmand.DeliveryStatusFailed, dispatchResult.Delivery.Status)
+		assert.False(t, dispatchResult.DeliveryAttempt.Success)
 	})
 }

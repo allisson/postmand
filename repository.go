@@ -30,7 +30,7 @@ type DeliveryRepository interface {
 	Create(delivery *Delivery) error
 	Update(delivery *Delivery) error
 	Delete(id ID) error
-	Dispatch() error
+	Dispatch() (*DispatchResult, error)
 }
 
 // DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.

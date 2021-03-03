@@ -114,7 +114,9 @@ func (d Delivery) Delete(id postmand.ID) error {
 }
 
 // Dispatch fetchs a delivery and send to url destination.
-func (d Delivery) Dispatch() error {
+func (d Delivery) Dispatch() (*postmand.DispatchResult, error) {
+	dispatchResult := &postmand.DispatchResult{}
+
 	sqlStatement := `
 		SELECT
 			deliveries.*
@@ -134,7 +136,7 @@ func (d Delivery) Dispatch() error {
 	// Starts a new transaction
 	tx, err := d.db.Beginx()
 	if err != nil {
-		return err
+		return dispatchResult, err
 	}
 
 	// Get delivery
@@ -144,10 +146,10 @@ func (d Delivery) Dispatch() error {
 		// Skip if no result
 		if err == sql.ErrNoRows {
 			rollback("delivery not found", tx)
-			return nil
+			return dispatchResult, nil
 		}
 		rollback("get delivery", tx)
-		return err
+		return dispatchResult, err
 	}
 
 	// Get webhook
@@ -157,7 +159,7 @@ func (d Delivery) Dispatch() error {
 	err = tx.Get(&webhook, sql, args...)
 	if err != nil {
 		rollback("get webhook", tx)
-		return err
+		return dispatchResult, err
 	}
 
 	// Dispatch webhook
@@ -190,7 +192,7 @@ func (d Delivery) Dispatch() error {
 	_, err = tx.Exec(sql, args...)
 	if err != nil {
 		rollback("update delivery", tx)
-		return err
+		return dispatchResult, err
 	}
 
 	// Create delivery attempt
@@ -209,15 +211,19 @@ func (d Delivery) Dispatch() error {
 	_, err = tx.Exec(sql, args...)
 	if err != nil {
 		rollback("create delivery attempt", tx)
-		return err
+		return dispatchResult, err
 	}
 
 	if err := tx.Commit(); err != nil {
 		rollback("unable to commit", tx)
-		return err
+		return dispatchResult, err
 	}
 
-	return nil
+	// Update dispatchResult
+	dispatchResult.Delivery = delivery
+	dispatchResult.DeliveryAttempt = deliveryAttempt
+
+	return dispatchResult, nil
 }
 
 // NewDelivery returns postmand.Delivery with db connection.
