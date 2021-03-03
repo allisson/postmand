@@ -61,7 +61,7 @@ func TestDeliveryAttempt(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": deliveryAttempt.ID}}
-		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(&options)
+		deliveryAttemptFromRepository, err := th.deliveryAttemptRepository.Get(options)
 		assert.Nil(t, err)
 		assert.Equal(t, deliveryAttempt.ID, deliveryAttemptFromRepository.ID)
 	})
@@ -92,7 +92,7 @@ func TestDeliveryAttempt(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
-		deliveryAttempts, err := th.deliveryAttemptRepository.List(&options)
+		deliveryAttempts, err := th.deliveryAttemptRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, deliveryAttempts, 1)
 		assert.Equal(t, deliveryAttempt2.ID, deliveryAttempts[0].ID)

@@ -53,7 +53,7 @@ func TestDelivery(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(&options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(options)
 		assert.Nil(t, err)
 		assert.Equal(t, postmand.DeliveryStatusDoing, deliveryFromRepository.Status)
 	})
@@ -75,7 +75,7 @@ func TestDelivery(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		_, err = th.deliveryRepository.Get(&options)
+		_, err = th.deliveryRepository.Get(options)
 		assert.Equal(t, sql.ErrNoRows, err)
 	})
 
@@ -93,7 +93,7 @@ func TestDelivery(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
-		deliveryFromRepository, err := th.deliveryRepository.Get(&options)
+		deliveryFromRepository, err := th.deliveryRepository.Get(options)
 		assert.Nil(t, err)
 		assert.Equal(t, delivery.ID, deliveryFromRepository.ID)
 	})
@@ -117,7 +117,7 @@ func TestDelivery(t *testing.T) {
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
-		deliveries, err := th.deliveryRepository.List(&options)
+		deliveries, err := th.deliveryRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, deliveries, 1)
 		assert.Equal(t, delivery2.ID, deliveries[0].ID)

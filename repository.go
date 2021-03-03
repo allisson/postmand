@@ -15,8 +15,8 @@ type RepositoryListOptions struct {
 
 // WebhookRepository is the interface that will be used to iterate with the Webhook data.
 type WebhookRepository interface {
-	Get(getOptions *RepositoryGetOptions) (*Webhook, error)
-	List(listOptions *RepositoryListOptions) ([]*Webhook, error)
+	Get(getOptions RepositoryGetOptions) (*Webhook, error)
+	List(listOptions RepositoryListOptions) ([]*Webhook, error)
 	Create(webhook *Webhook) error
 	Update(webhook *Webhook) error
 	Delete(id ID) error
@@ -24,8 +24,8 @@ type WebhookRepository interface {
 
 // DeliveryRepository is the interface that will be used to iterate with the Delivery data.
 type DeliveryRepository interface {
-	Get(getOptions *RepositoryGetOptions) (*Delivery, error)
-	List(listOptions *RepositoryListOptions) ([]*Delivery, error)
+	Get(getOptions RepositoryGetOptions) (*Delivery, error)
+	List(listOptions RepositoryListOptions) ([]*Delivery, error)
 	Create(delivery *Delivery) error
 	Update(delivery *Delivery) error
 	Delete(id ID) error
@@ -33,7 +33,7 @@ type DeliveryRepository interface {
 
 // DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.
 type DeliveryAttemptRepository interface {
-	Get(getOptions *RepositoryGetOptions) (*DeliveryAttempt, error)
-	List(listOptions *RepositoryListOptions) ([]*DeliveryAttempt, error)
+	Get(getOptions RepositoryGetOptions) (*DeliveryAttempt, error)
+	List(listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
 	Create(deliveryAttempt *DeliveryAttempt) error
 }
