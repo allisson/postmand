@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/allisson/postmand"
 	"github.com/jmoiron/sqlx"
 )
@@ -11,25 +13,25 @@ type DeliveryAttempt struct {
 }
 
 // Get returns postmand.DeliveryAttempt by options filter.
-func (d DeliveryAttempt) Get(getOptions postmand.RepositoryGetOptions) (*postmand.DeliveryAttempt, error) {
+func (d DeliveryAttempt) Get(ctx context.Context, getOptions postmand.RepositoryGetOptions) (*postmand.DeliveryAttempt, error) {
 	deliveryAttempt := postmand.DeliveryAttempt{}
 	sql, args := getQuery("delivery_attempts", getOptions)
-	err := d.db.Get(&deliveryAttempt, sql, args...)
+	err := d.db.GetContext(ctx, &deliveryAttempt, sql, args...)
 	return &deliveryAttempt, err
 }
 
 // List returns a slice of postmand.DeliveryAttempt by options filter.
-func (d DeliveryAttempt) List(listOptions postmand.RepositoryListOptions) ([]*postmand.DeliveryAttempt, error) {
+func (d DeliveryAttempt) List(ctx context.Context, listOptions postmand.RepositoryListOptions) ([]*postmand.DeliveryAttempt, error) {
 	deliveryAttempts := []*postmand.DeliveryAttempt{}
 	sql, args := listQuery("delivery_attempts", listOptions)
-	err := d.db.Select(&deliveryAttempts, sql, args...)
+	err := d.db.SelectContext(ctx, &deliveryAttempts, sql, args...)
 	return deliveryAttempts, err
 }
 
 // Create postmand.DeliveryAttempt on database.
-func (d DeliveryAttempt) Create(deliveryAttempt *postmand.DeliveryAttempt) error {
+func (d DeliveryAttempt) Create(ctx context.Context, deliveryAttempt *postmand.DeliveryAttempt) error {
 	sql, args := insertQuery("delivery_attempts", deliveryAttempt)
-	_, err := d.db.Exec(sql, args...)
+	_, err := d.db.ExecContext(ctx, sql, args...)
 	return err
 }
 

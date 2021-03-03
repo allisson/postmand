@@ -2,6 +2,7 @@ package repository
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"net/http"
 	"net/http/httputil"
@@ -75,46 +76,46 @@ type Delivery struct {
 }
 
 // Get returns postmand.Delivery by options filter.
-func (d Delivery) Get(getOptions postmand.RepositoryGetOptions) (*postmand.Delivery, error) {
+func (d Delivery) Get(ctx context.Context, getOptions postmand.RepositoryGetOptions) (*postmand.Delivery, error) {
 	delivery := postmand.Delivery{}
 	sql, args := getQuery("deliveries", getOptions)
-	err := d.db.Get(&delivery, sql, args...)
+	err := d.db.GetContext(ctx, &delivery, sql, args...)
 	return &delivery, err
 }
 
 // List returns a slice of postmand.Delivery by options filter.
-func (d Delivery) List(listOptions postmand.RepositoryListOptions) ([]*postmand.Delivery, error) {
+func (d Delivery) List(ctx context.Context, listOptions postmand.RepositoryListOptions) ([]*postmand.Delivery, error) {
 	deliveries := []*postmand.Delivery{}
 	sql, args := listQuery("deliveries", listOptions)
-	err := d.db.Select(&deliveries, sql, args...)
+	err := d.db.SelectContext(ctx, &deliveries, sql, args...)
 	return deliveries, err
 }
 
 // Create postmand.Delivery on database.
-func (d Delivery) Create(delivery *postmand.Delivery) error {
+func (d Delivery) Create(ctx context.Context, delivery *postmand.Delivery) error {
 	sql, args := insertQuery("deliveries", delivery)
-	_, err := d.db.Exec(sql, args...)
+	_, err := d.db.ExecContext(ctx, sql, args...)
 	return err
 }
 
 // Update postmand.Delivery on database.
-func (d Delivery) Update(delivery *postmand.Delivery) error {
+func (d Delivery) Update(ctx context.Context, delivery *postmand.Delivery) error {
 	sql, args := updateQuery("deliveries", delivery.ID, delivery)
-	_, err := d.db.Exec(sql, args...)
+	_, err := d.db.ExecContext(ctx, sql, args...)
 	return err
 }
 
 // Delete postmand.Delivery on database.
-func (d Delivery) Delete(id postmand.ID) error {
+func (d Delivery) Delete(ctx context.Context, id postmand.ID) error {
 	sqlStatement := `
 		DELETE FROM deliveries WHERE id = $1
 	`
-	_, err := d.db.Exec(sqlStatement, id)
+	_, err := d.db.ExecContext(ctx, sqlStatement, id)
 	return err
 }
 
 // Dispatch fetchs a delivery and send to url destination.
-func (d Delivery) Dispatch() error {
+func (d Delivery) Dispatch(ctx context.Context) error {
 	sqlStatement := `
 		SELECT
 			deliveries.*
@@ -139,7 +140,7 @@ func (d Delivery) Dispatch() error {
 
 	// Get delivery
 	delivery := postmand.Delivery{}
-	err = tx.Get(&delivery, sqlStatement, postmand.DeliveryStatusPending, time.Now().UTC())
+	err = tx.GetContext(ctx, &delivery, sqlStatement, postmand.DeliveryStatusPending, time.Now().UTC())
 	if err != nil {
 		// Skip if no result
 		if err == sql.ErrNoRows {
@@ -154,7 +155,7 @@ func (d Delivery) Dispatch() error {
 	webhook := postmand.Webhook{}
 	getOptions := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.WebhookID}}
 	sql, args := getQuery("webhooks", getOptions)
-	err = tx.Get(&webhook, sql, args...)
+	err = tx.GetContext(ctx, &webhook, sql, args...)
 	if err != nil {
 		rollback("get webhook", tx)
 		return err
@@ -187,7 +188,7 @@ func (d Delivery) Dispatch() error {
 	delivery.ScheduledAt = newScheduledAt
 	delivery.UpdatedAt = time.Now().UTC()
 	sql, args = updateQuery("deliveries", delivery.ID, delivery)
-	_, err = tx.Exec(sql, args...)
+	_, err = tx.ExecContext(ctx, sql, args...)
 	if err != nil {
 		rollback("update delivery", tx)
 		return err
@@ -206,7 +207,7 @@ func (d Delivery) Dispatch() error {
 		CreatedAt:          time.Now().UTC(),
 	}
 	sql, args = insertQuery("delivery_attempts", deliveryAttempt)
-	_, err = tx.Exec(sql, args...)
+	_, err = tx.ExecContext(ctx, sql, args...)
 	if err != nil {
 		rollback("create delivery attempt", tx)
 		return err

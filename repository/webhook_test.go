@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
 	"testing"
 	"time"
@@ -29,12 +30,14 @@ func makeWebhook() postmand.Webhook {
 }
 
 func TestTransaction(t *testing.T) {
+	ctx := context.Background()
+
 	t.Run("Create webhook", func(t *testing.T) {
 		th := newTestHelper()
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 	})
 
@@ -43,15 +46,15 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		webhook.ValidStatusCodes = pq.Int32Array{200, 201, 204}
-		err = th.webhookRepository.Update(&webhook)
+		err = th.webhookRepository.Update(ctx, &webhook)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		webhookFromRepository, err := th.webhookRepository.Get(options)
+		webhookFromRepository, err := th.webhookRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, pq.Int32Array{200, 201, 204}, webhookFromRepository.ValidStatusCodes)
 	})
@@ -61,14 +64,14 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
-		err = th.webhookRepository.Delete(webhook.ID)
+		err = th.webhookRepository.Delete(ctx, webhook.ID)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		_, err = th.webhookRepository.Get(options)
+		_, err = th.webhookRepository.Get(ctx, options)
 		assert.Equal(t, sql.ErrNoRows, err)
 	})
 
@@ -77,11 +80,11 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(&webhook)
+		err := th.webhookRepository.Create(ctx, &webhook)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
-		webhookFromRepository, err := th.webhookRepository.Get(options)
+		webhookFromRepository, err := th.webhookRepository.Get(ctx, options)
 		assert.Nil(t, err)
 		assert.Equal(t, webhook.ID, webhookFromRepository.ID)
 	})
@@ -91,15 +94,15 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook1 := makeWebhook()
-		err := th.webhookRepository.Create(&webhook1)
+		err := th.webhookRepository.Create(ctx, &webhook1)
 		assert.Nil(t, err)
 
 		webhook2 := makeWebhook()
-		err = th.webhookRepository.Create(&webhook2)
+		err = th.webhookRepository.Create(ctx, &webhook2)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryListOptions{Limit: 1, Offset: 0, OrderBy: "created_at", Order: "DESC"}
-		webhooks, err := th.webhookRepository.List(options)
+		webhooks, err := th.webhookRepository.List(ctx, options)
 		assert.Nil(t, err)
 		assert.Len(t, webhooks, 1)
 		assert.Equal(t, webhook2.ID, webhooks[0].ID)
