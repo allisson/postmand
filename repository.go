@@ -11,6 +11,7 @@ type RepositoryListOptions struct {
 	Limit   int
 	Offset  int
 	OrderBy string
+	Order   string
 }
 
 // WebhookRepository is the interface that will be used to iterate with the Webhook data.
@@ -29,6 +30,7 @@ type DeliveryRepository interface {
 	Create(delivery *Delivery) error
 	Update(delivery *Delivery) error
 	Delete(id ID) error
+	Dispatch() error
 }
 
 // DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.

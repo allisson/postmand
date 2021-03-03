@@ -10,10 +10,8 @@ import (
 )
 
 const (
-	// DeliveryStatusTodo represents the delivery todo status
-	DeliveryStatusTodo = "todo"
-	// DeliveryStatusDoing represents the delivery doing status
-	DeliveryStatusDoing = "doing"
+	// DeliveryStatusPending represents the delivery pending status
+	DeliveryStatusPending = "pending"
 	// DeliveryStatusSucceeded represents the delivery succeeded status
 	DeliveryStatusSucceeded = "succeeded"
 	// DeliveryStatusFailed represents the delivery failed status
@@ -73,7 +71,7 @@ func (d Delivery) Validate() error {
 		validation.Field(&d.ID, validation.Required, is.UUIDv4),
 		validation.Field(&d.WebhookID, validation.Required, is.UUIDv4),
 		validation.Field(&d.ScheduledAt, validation.Required),
-		validation.Field(&d.Status, validation.Required, validation.In("todo", "doing", "succeeded", "failed")),
+		validation.Field(&d.Status, validation.Required, validation.In(DeliveryStatusPending, DeliveryStatusSucceeded, DeliveryStatusFailed)),
 	)
 }
 
@@ -82,8 +80,7 @@ type DeliveryAttempt struct {
 	ID                 ID        `json:"id" db:"id"`
 	WebhookID          ID        `json:"webhook_id" db:"webhook_id"`
 	DeliveryID         ID        `json:"delivery_id" db:"delivery_id"`
-	ResponseHeaders    string    `json:"response_headers" db:"response_headers"`
-	ResponseBody       string    `json:"response_body" db:"response_body"`
+	RawResponse        string    `json:"raw_response" db:"raw_response"`
 	ResponseStatusCode int       `json:"response_status_code" db:"response_status_code"`
 	ExecutionDuration  int       `json:"execution_duration" db:"execution_duration"`
 	Success            bool      `json:"success" db:"success"`

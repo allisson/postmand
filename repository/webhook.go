@@ -35,7 +35,7 @@ func (w Webhook) Create(webhook *postmand.Webhook) error {
 
 // Update postmand.Webhook on database.
 func (w Webhook) Update(webhook *postmand.Webhook) error {
-	sql, args := updateQuery("webhooks", webhook)
+	sql, args := updateQuery("webhooks", webhook.ID, webhook)
 	_, err := w.db.Exec(sql, args...)
 	return err
 }

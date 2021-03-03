@@ -53,5 +53,5 @@ jobs:
 
       - name: Run Tests
         env:
-          POSTMAND_DATABASE_URL: "postgres://test:test@localhost:5432/postmand?sslmode=disable"
-        run: make db-migrate && go test -covermode=count -coverprofile=count.out -v ./...
+          POSTMAND_TEST_DATABASE_URL: "postgres://test:test@localhost:5432/postmand?sslmode=disable"
+        run: make db-test-migrate && go test -covermode=count -coverprofile=count.out -v ./...

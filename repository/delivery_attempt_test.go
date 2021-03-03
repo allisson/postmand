@@ -2,21 +2,21 @@ package repository
 
 import (
 	"testing"
+	"time"
 
 	"github.com/allisson/postmand"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
-func makeDeliveryAttempt() *postmand.DeliveryAttempt {
-	return &postmand.DeliveryAttempt{
+func makeDeliveryAttempt() postmand.DeliveryAttempt {
+	return postmand.DeliveryAttempt{
 		ID:                 uuid.New(),
-		ResponseHeaders:    `{"Content-Type": ["application/json; charset=utf-8"]}`,
-		ResponseBody:       `{"message":"A requisição para registrar essa transação foi enviada."}`,
 		ResponseStatusCode: 201,
 		ExecutionDuration:  150,
 		Success:            true,
 		Error:              "",
+		CreatedAt:          time.Now().UTC(),
 	}
 }
 
@@ -26,18 +26,18 @@ func TestDeliveryAttempt(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		deliveryAttempt := makeDeliveryAttempt()
 		deliveryAttempt.WebhookID = webhook.ID
 		deliveryAttempt.DeliveryID = delivery.ID
-		err = th.deliveryAttemptRepository.Create(deliveryAttempt)
+		err = th.deliveryAttemptRepository.Create(&deliveryAttempt)
 		assert.Nil(t, err)
 	})
 
@@ -46,18 +46,18 @@ func TestDeliveryAttempt(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		deliveryAttempt := makeDeliveryAttempt()
 		deliveryAttempt.WebhookID = webhook.ID
 		deliveryAttempt.DeliveryID = delivery.ID
-		err = th.deliveryAttemptRepository.Create(deliveryAttempt)
+		err = th.deliveryAttemptRepository.Create(&deliveryAttempt)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": deliveryAttempt.ID}}
@@ -71,27 +71,27 @@ func TestDeliveryAttempt(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		delivery := makeDelivery()
 		delivery.WebhookID = webhook.ID
-		err = th.deliveryRepository.Create(delivery)
+		err = th.deliveryRepository.Create(&delivery)
 		assert.Nil(t, err)
 
 		deliveryAttempt1 := makeDeliveryAttempt()
 		deliveryAttempt1.WebhookID = webhook.ID
 		deliveryAttempt1.DeliveryID = delivery.ID
-		err = th.deliveryAttemptRepository.Create(deliveryAttempt1)
+		err = th.deliveryAttemptRepository.Create(&deliveryAttempt1)
 		assert.Nil(t, err)
 
 		deliveryAttempt2 := makeDeliveryAttempt()
 		deliveryAttempt2.WebhookID = webhook.ID
 		deliveryAttempt2.DeliveryID = delivery.ID
-		err = th.deliveryAttemptRepository.Create(deliveryAttempt2)
+		err = th.deliveryAttemptRepository.Create(&deliveryAttempt2)
 		assert.Nil(t, err)
 
-		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
+		options := postmand.RepositoryListOptions{Limit: 1, Offset: 0, OrderBy: "created_at", Order: "DESC"}
 		deliveryAttempts, err := th.deliveryAttemptRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, deliveryAttempts, 1)

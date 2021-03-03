@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"testing"
+	"time"
 
 	"github.com/allisson/postmand"
 	"github.com/google/uuid"
@@ -10,17 +11,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func makeWebhook() *postmand.Webhook {
-	return &postmand.Webhook{
+func makeWebhook() postmand.Webhook {
+	return postmand.Webhook{
 		ID:                     uuid.New(),
 		Name:                   "Test",
 		URL:                    "https://httpbin.org/post",
 		ContentType:            "application/json",
+		Active:                 true,
 		ValidStatusCodes:       pq.Int32Array{200, 201},
 		MaxDeliveryAttempts:    1,
 		DeliveryAttemptTimeout: 1,
 		RetryMinBackoff:        1,
 		RetryMaxBackoff:        1,
+		CreatedAt:              time.Now().UTC(),
+		UpdatedAt:              time.Now().UTC(),
 	}
 }
 
@@ -30,7 +34,7 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 	})
 
@@ -39,11 +43,11 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		webhook.ValidStatusCodes = pq.Int32Array{200, 201, 204}
-		err = th.webhookRepository.Update(webhook)
+		err = th.webhookRepository.Update(&webhook)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
@@ -57,7 +61,7 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		err = th.webhookRepository.Delete(webhook.ID)
@@ -73,7 +77,7 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook := makeWebhook()
-		err := th.webhookRepository.Create(webhook)
+		err := th.webhookRepository.Create(&webhook)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
@@ -87,14 +91,14 @@ func TestTransaction(t *testing.T) {
 		defer th.db.Close()
 
 		webhook1 := makeWebhook()
-		err := th.webhookRepository.Create(webhook1)
+		err := th.webhookRepository.Create(&webhook1)
 		assert.Nil(t, err)
 
 		webhook2 := makeWebhook()
-		err = th.webhookRepository.Create(webhook2)
+		err = th.webhookRepository.Create(&webhook2)
 		assert.Nil(t, err)
 
-		options := postmand.RepositoryListOptions{Limit: 1, Offset: 1, OrderBy: "created_at DESC"}
+		options := postmand.RepositoryListOptions{Limit: 1, Offset: 0, OrderBy: "created_at", Order: "DESC"}
 		webhooks, err := th.webhookRepository.List(options)
 		assert.Nil(t, err)
 		assert.Len(t, webhooks, 1)
