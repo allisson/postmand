@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/allisson/go-env"
 	"github.com/allisson/postmand/repository"
@@ -30,6 +33,7 @@ func main() {
 	if err := db.Ping(); err != nil {
 		logger.Fatal("database-ping-error", zap.Error(err))
 	}
+	db.SetMaxOpenConns(env.GetInt("POSTMAND_DATABASE_MAX_OPEN_CONNS", 2))
 
 	// Setup cli
 	app := cli.NewApp()
@@ -45,7 +49,7 @@ func main() {
 		{
 			Name:    "migrate",
 			Aliases: []string{"m"},
-			Usage:   "execute database migration",
+			Usage:   "executes database migration",
 			Action: func(c *cli.Context) error {
 				migrationRepository := repository.NewMigration(
 					db,
@@ -53,6 +57,40 @@ func main() {
 				)
 				migrationService := service.NewMigration(migrationRepository)
 				return migrationService.Run(c.Context)
+			},
+		},
+		{
+			Name:    "worker",
+			Aliases: []string{"w"},
+			Usage:   "executes worker to dispatch webhooks",
+			Action: func(c *cli.Context) error {
+				deliveryRepository := repository.NewDelivery(db)
+				pollingInterval := time.Duration(env.GetInt("POSTMAND_POLLING_INTERVAL", 1000)) * time.Millisecond
+				workerService := service.NewWorker(deliveryRepository, logger, pollingInterval)
+
+				// Graceful shutdown
+				idleConnsClosed := make(chan struct{})
+				go func() {
+					sigint := make(chan os.Signal, 1)
+
+					// interrupt signal sent from terminal
+					signal.Notify(sigint, os.Interrupt)
+					// sigterm signal sent from kubernetes
+					signal.Notify(sigint, syscall.SIGTERM)
+
+					<-sigint
+
+					// We received an interrupt signal, shut down.
+					workerService.Shutdown(c.Context)
+					close(idleConnsClosed)
+				}()
+
+				logger.Info("worker-started")
+				workerService.Run(c.Context)
+
+				<-idleConnsClosed
+
+				return nil
 			},
 		},
 	}
