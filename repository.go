@@ -41,3 +41,8 @@ type DeliveryAttemptRepository interface {
 	List(ctx context.Context, listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
 	Create(ctx context.Context, deliveryAttempt *DeliveryAttempt) error
 }
+
+// MigrationRepository is the interface that will be used to run database migrations.
+type MigrationRepository interface {
+	Run(ctx context.Context) error
+}

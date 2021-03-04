@@ -22,3 +22,6 @@ bin/
 # golang migrate
 migrate.darwin-amd64
 migrate.linux-amd64
+
+# dot env
+.env
