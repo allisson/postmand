@@ -115,7 +115,7 @@ func (d Delivery) Delete(ctx context.Context, id postmand.ID) error {
 }
 
 // Dispatch fetchs a delivery and send to url destination.
-func (d Delivery) Dispatch(ctx context.Context) error {
+func (d Delivery) Dispatch(ctx context.Context) (*postmand.DeliveryAttempt, error) {
 	sqlStatement := `
 		SELECT
 			deliveries.*
@@ -135,7 +135,7 @@ func (d Delivery) Dispatch(ctx context.Context) error {
 	// Starts a new transaction
 	tx, err := d.db.Beginx()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Get delivery
@@ -145,10 +145,10 @@ func (d Delivery) Dispatch(ctx context.Context) error {
 		// Skip if no result
 		if err == sql.ErrNoRows {
 			rollback("delivery not found", tx)
-			return nil
+			return nil, nil
 		}
 		rollback("get delivery", tx)
-		return err
+		return nil, err
 	}
 
 	// Get webhook
@@ -158,7 +158,7 @@ func (d Delivery) Dispatch(ctx context.Context) error {
 	err = tx.GetContext(ctx, &webhook, sql, args...)
 	if err != nil {
 		rollback("get webhook", tx)
-		return err
+		return nil, err
 	}
 
 	// Dispatch webhook
@@ -191,7 +191,7 @@ func (d Delivery) Dispatch(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, sql, args...)
 	if err != nil {
 		rollback("update delivery", tx)
-		return err
+		return nil, err
 	}
 
 	// Create delivery attempt
@@ -210,18 +210,18 @@ func (d Delivery) Dispatch(ctx context.Context) error {
 	_, err = tx.ExecContext(ctx, sql, args...)
 	if err != nil {
 		rollback("create delivery attempt", tx)
-		return err
+		return nil, err
 	}
 
 	if err := tx.Commit(); err != nil {
 		rollback("unable to commit", tx)
-		return err
+		return nil, err
 	}
 
-	return nil
+	return &deliveryAttempt, nil
 }
 
-// NewDelivery returns postmand.Delivery with db connection.
+// NewDelivery will create an implementation of postmand.DeliveryRepository.
 func NewDelivery(db *sqlx.DB) *Delivery {
 	return &Delivery{db: db}
 }
