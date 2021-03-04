@@ -51,7 +51,7 @@ func (w Webhook) Delete(ctx context.Context, id postmand.ID) error {
 	return err
 }
 
-// NewWebhook returns postmand.Webhook with db connection.
+// NewWebhook will create an implementation of postmand.WebhookRepository.
 func NewWebhook(db *sqlx.DB) *Webhook {
 	return &Webhook{db: db}
 }

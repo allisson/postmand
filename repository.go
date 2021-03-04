@@ -32,7 +32,7 @@ type DeliveryRepository interface {
 	Create(ctx context.Context, delivery *Delivery) error
 	Update(ctx context.Context, delivery *Delivery) error
 	Delete(ctx context.Context, id ID) error
-	Dispatch(ctx context.Context) error
+	Dispatch(ctx context.Context) (*DeliveryAttempt, error)
 }
 
 // DeliveryAttemptRepository is the interface that will be used to iterate with the DeliveryAttempt data.

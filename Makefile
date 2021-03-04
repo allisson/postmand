@@ -10,6 +10,10 @@ lint:
 test:
 	go test -covermode=count -coverprofile=count.out -v ./...
 
+mock:
+	@rm -rf mocks
+	mockery --all
+
 download-golang-migrate-binary:
 	if [ ! -f ./migrate.$(PLATFORM)-amd64 ] ; \
 	then \

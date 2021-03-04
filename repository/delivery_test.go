@@ -202,7 +202,7 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch(ctx)
+		_, err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
@@ -239,7 +239,7 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch(ctx)
+		_, err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
@@ -276,7 +276,7 @@ func TestDelivery(t *testing.T) {
 		err = th.deliveryRepository.Create(ctx, &delivery)
 		assert.Nil(t, err)
 
-		err = th.deliveryRepository.Dispatch(ctx)
+		_, err = th.deliveryRepository.Dispatch(ctx)
 		assert.Nil(t, err)
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
