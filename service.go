@@ -21,3 +21,12 @@ type WebhookService interface {
 	Update(ctx context.Context, webhook *Webhook) error
 	Delete(ctx context.Context, id ID) error
 }
+
+// DeliveryService is the interface that will be used to perform operations with deliveries.
+type DeliveryService interface {
+	Get(ctx context.Context, getOptions RepositoryGetOptions) (*Delivery, error)
+	List(ctx context.Context, listOptions RepositoryListOptions) ([]*Delivery, error)
+	Create(ctx context.Context, delivery *Delivery) error
+	Update(ctx context.Context, delivery *Delivery) error
+	Delete(ctx context.Context, id ID) error
+}
