@@ -27,6 +27,8 @@ func (d Delivery) List(ctx context.Context, listOptions postmand.RepositoryListO
 func (d Delivery) Create(ctx context.Context, delivery *postmand.Delivery) error {
 	now := time.Now().UTC()
 	delivery.ID = uuid.New()
+	delivery.ScheduledAt = now
+	delivery.Status = postmand.DeliveryStatusPending
 	delivery.CreatedAt = now
 	delivery.UpdatedAt = now
 	return d.deliveryRepository.Create(ctx, delivery)

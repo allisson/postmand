@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -135,7 +134,7 @@ func TestDelivery(t *testing.T) {
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": delivery.ID}}
 		_, err = th.deliveryRepository.Get(ctx, options)
-		assert.Equal(t, sql.ErrNoRows, err)
+		assert.Equal(t, postmand.ErrDeliveryNotFound, err)
 	})
 
 	t.Run("Get delivery", func(t *testing.T) {
