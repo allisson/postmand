@@ -76,6 +76,7 @@ type DeliveryAttempt struct {
 	ID                 ID        `json:"id" db:"id"`
 	WebhookID          ID        `json:"webhook_id" db:"webhook_id"`
 	DeliveryID         ID        `json:"delivery_id" db:"delivery_id"`
+	RawRequest         string    `json:"raw_request" db:"raw_request"`
 	RawResponse        string    `json:"raw_response" db:"raw_response"`
 	ResponseStatusCode int       `json:"response_status_code" db:"response_status_code"`
 	ExecutionDuration  int       `json:"execution_duration" db:"execution_duration"`

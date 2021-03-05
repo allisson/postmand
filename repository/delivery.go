@@ -3,7 +3,10 @@ package repository
 import (
 	"bytes"
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"net/http"
 	"net/http/httputil"
 	"time"
@@ -15,6 +18,7 @@ import (
 )
 
 type dispatchResponse struct {
+	RawRequest         string
 	RawResponse        string
 	ResponseStatusCode int
 	ExecutionDuration  int
@@ -34,6 +38,24 @@ func dispatchToURL(webhook *postmand.Webhook, delivery *postmand.Delivery) dispa
 		return dr
 	}
 	request.Header.Set("Content-Type", webhook.ContentType)
+	if webhook.SecretToken != "" {
+		hash := hmac.New(sha256.New, []byte(webhook.SecretToken))
+		_, err := hash.Write([]byte(delivery.Payload))
+		if err != nil {
+			dr.Success = false
+			dr.Error = err.Error()
+			return dr
+		}
+		request.Header.Set("X-Hub-Signature", hex.EncodeToString(hash.Sum(nil)))
+	}
+
+	// Create request dump
+	requestDump, err := httputil.DumpRequest(request, true)
+	if err != nil {
+		dr.Success = false
+		dr.Error = err.Error()
+		return dr
+	}
 
 	// Make request
 	start := time.Now()
@@ -62,6 +84,7 @@ func dispatchToURL(webhook *postmand.Webhook, delivery *postmand.Delivery) dispa
 	}
 
 	// Update dispatch response
+	dr.RawRequest = string(requestDump)
 	dr.RawResponse = string(responseDump)
 	dr.ResponseStatusCode = response.StatusCode
 	dr.ExecutionDuration = int(latency.Milliseconds())
@@ -202,6 +225,7 @@ func (d Delivery) Dispatch(ctx context.Context) (*postmand.DeliveryAttempt, erro
 		ID:                 uuid.New(),
 		WebhookID:          webhook.ID,
 		DeliveryID:         delivery.ID,
+		RawRequest:         dr.RawRequest,
 		RawResponse:        dr.RawResponse,
 		ResponseStatusCode: dr.ResponseStatusCode,
 		ExecutionDuration:  dr.ExecutionDuration,

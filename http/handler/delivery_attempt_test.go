@@ -40,7 +40,7 @@ func TestDeliveryAttempt(t *testing.T) {
 			Handler(router).
 			Get("/v1/delivery-attempts").
 			Expect(t).
-			Body(`{"delivery_attempts":[{"id":"00000000-0000-0000-0000-000000000000","webhook_id":"00000000-0000-0000-0000-000000000000","delivery_id":"00000000-0000-0000-0000-000000000000","raw_response":"","response_status_code":0,"execution_duration":0,"success":false,"error":"","created_at":"0001-01-01T00:00:00Z"}],"limit":50,"offset":0}`).
+			Body(`{"delivery_attempts":[{"id":"00000000-0000-0000-0000-000000000000","webhook_id":"00000000-0000-0000-0000-000000000000","delivery_id":"00000000-0000-0000-0000-000000000000","raw_request":"", "raw_response":"","response_status_code":0,"execution_duration":0,"success":false,"error":"","created_at":"0001-01-01T00:00:00Z"}],"limit":50,"offset":0}`).
 			Status(nethttp.StatusOK).
 			End()
 
@@ -60,7 +60,7 @@ func TestDeliveryAttempt(t *testing.T) {
 			Handler(router).
 			Get("/v1/delivery-attempts/97087247-d89d-410e-b915-740b4c6d9d99").
 			Expect(t).
-			Body(`{"id":"97087247-d89d-410e-b915-740b4c6d9d99","webhook_id":"cd9b7318-36c6-4534-be84-fe78042aeaf2","delivery_id":"b919ca2c-6b0f-4a22-a61f-8c882ee69323","raw_response":"","response_status_code":0,"execution_duration":0,"success":false,"error":"","created_at":"0001-01-01T00:00:00Z"}`).
+			Body(`{"id":"97087247-d89d-410e-b915-740b4c6d9d99","webhook_id":"cd9b7318-36c6-4534-be84-fe78042aeaf2","delivery_id":"b919ca2c-6b0f-4a22-a61f-8c882ee69323","raw_request":"", "raw_response":"","response_status_code":0,"execution_duration":0,"success":false,"error":"","created_at":"0001-01-01T00:00:00Z"}`).
 			Status(nethttp.StatusOK).
 			End()
 

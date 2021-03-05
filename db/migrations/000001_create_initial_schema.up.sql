@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS delivery_attempts(
    id UUID PRIMARY KEY,
    webhook_id UUID NOT NULL,
    delivery_id UUID NOT NULL,
+   raw_request TEXT NOT NULL,
    raw_response TEXT NOT NULL,
    response_status_code SMALLINT NOT NULL,
    execution_duration SMALLINT NOT NULL,
