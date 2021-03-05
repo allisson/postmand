@@ -8,8 +8,11 @@ import (
 	"time"
 
 	"github.com/allisson/go-env"
+	"github.com/allisson/postmand/http"
+	"github.com/allisson/postmand/http/handler"
 	"github.com/allisson/postmand/repository"
 	"github.com/allisson/postmand/service"
+	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/cli/v2"
@@ -89,6 +92,30 @@ func main() {
 				workerService.Run(c.Context)
 
 				<-idleConnsClosed
+
+				return nil
+			},
+		},
+		{
+			Name:    "server",
+			Aliases: []string{"s"},
+			Usage:   "executes http server",
+			Action: func(c *cli.Context) error {
+				webhookRepository := repository.NewWebhook(db)
+				webhookService := service.NewWebhook(webhookRepository)
+				webhookHandler := handler.NewWebhook(webhookService, logger)
+
+				mux := http.NewRouter(logger)
+				mux.Route("/v1/webhooks", func(r chi.Router) {
+					r.Get("/", webhookHandler.List)
+					r.Post("/", webhookHandler.Create)
+					r.Get("/{webhook_id}", webhookHandler.Get)
+					r.Put("/{webhook_id}", webhookHandler.Update)
+					r.Delete("/{webhook_id}", webhookHandler.Delete)
+				})
+
+				server := http.NewServer(mux, env.GetInt("POSTMAND_HTTP_PORT", 8000), logger)
+				server.Run()
 
 				return nil
 			},
