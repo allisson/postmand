@@ -28,6 +28,11 @@ var errorResponses = map[string]errorResponse{
 		Message:    "webhook not found",
 		StatusCode: http.StatusNotFound,
 	},
+	"delivery_not_found": {
+		Code:       6,
+		Message:    "delivery not found",
+		StatusCode: http.StatusNotFound,
+	},
 }
 
 type errorResponse struct {

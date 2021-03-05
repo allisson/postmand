@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"github.com/steinfletcher/apitest"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
 )
@@ -34,7 +33,6 @@ func makeWebhook() postmand.Webhook {
 }
 
 func TestWebhook(t *testing.T) {
-	assert.True(t, true)
 	logger, _ := zap.NewDevelopment()
 
 	t.Run("List", func(t *testing.T) {
