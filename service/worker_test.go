@@ -16,7 +16,7 @@ func TestWorker(t *testing.T) {
 	ctx := context.Background()
 	pollingInterval := 10 * time.Millisecond
 
-	t.Run("Run with dispatch error", func(t *testing.T) {
+	t.Run("run with dispatch error", func(t *testing.T) {
 		deliveryRepository := &mocks.DeliveryRepository{}
 		logger, _ := zap.NewDevelopment()
 		workerService := NewWorker(deliveryRepository, logger, pollingInterval)
@@ -26,12 +26,12 @@ func TestWorker(t *testing.T) {
 		go func() {
 			workerService.Shutdown(ctx)
 		}()
-		workerService.Run(ctx)
+		workerService.run(ctx)
 
 		deliveryRepository.AssertExpectations(t)
 	})
 
-	t.Run("Run with no dispatch", func(t *testing.T) {
+	t.Run("run with no dispatch", func(t *testing.T) {
 		deliveryRepository := &mocks.DeliveryRepository{}
 		logger, _ := zap.NewDevelopment()
 		workerService := NewWorker(deliveryRepository, logger, pollingInterval)
@@ -41,12 +41,12 @@ func TestWorker(t *testing.T) {
 		go func() {
 			workerService.Shutdown(ctx)
 		}()
-		workerService.Run(ctx)
+		workerService.run(ctx)
 
 		deliveryRepository.AssertExpectations(t)
 	})
 
-	t.Run("Run with dispatch", func(t *testing.T) {
+	t.Run("run with dispatch", func(t *testing.T) {
 		deliveryRepository := &mocks.DeliveryRepository{}
 		logger, _ := zap.NewDevelopment()
 		workerService := NewWorker(deliveryRepository, logger, pollingInterval)
@@ -56,7 +56,7 @@ func TestWorker(t *testing.T) {
 		go func() {
 			workerService.Shutdown(ctx)
 		}()
-		workerService.Run(ctx)
+		workerService.run(ctx)
 
 		deliveryRepository.AssertExpectations(t)
 	})

@@ -1,2 +1,2 @@
 # postmand
-Simple webhook delivery system powered by Golang and PostgreSQL
+Simple webhook delivery system powered by Golang and PostgreSQL.
