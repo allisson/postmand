@@ -30,3 +30,9 @@ type DeliveryService interface {
 	Update(ctx context.Context, delivery *Delivery) error
 	Delete(ctx context.Context, id ID) error
 }
+
+// DeliveryAttemptService is the interface that will be used to perform operations with delivery attempt.
+type DeliveryAttemptService interface {
+	Get(ctx context.Context, getOptions RepositoryGetOptions) (*DeliveryAttempt, error)
+	List(ctx context.Context, listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
+}

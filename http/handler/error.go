@@ -33,6 +33,11 @@ var errorResponses = map[string]errorResponse{
 		Message:    "delivery not found",
 		StatusCode: http.StatusNotFound,
 	},
+	"delivery_attempt_not_found": {
+		Code:       7,
+		Message:    "delivery attempt not found",
+		StatusCode: http.StatusNotFound,
+	},
 }
 
 type errorResponse struct {
