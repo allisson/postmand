@@ -9,11 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	mw "github.com/allisson/postmand/http/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
-
-	mw "github.com/allisson/postmand/http/middleware"
 )
 
 // NewRouter returns *chi.Mux with base middlewares.
@@ -27,14 +26,14 @@ func NewRouter(logger *zap.Logger) *chi.Mux {
 	return r
 }
 
-// Server ...
+// Server implements a http server.
 type Server struct {
 	mux      *chi.Mux
 	httpPort int
 	logger   *zap.Logger
 }
 
-// Run ...
+// Run starts a http server.
 func (s Server) Run() {
 	httpServer := &nethttp.Server{Addr: fmt.Sprintf(":%d", s.httpPort), Handler: s.mux}
 	idleConnsClosed := make(chan struct{})
@@ -69,7 +68,7 @@ func (s Server) Run() {
 	<-idleConnsClosed
 }
 
-// NewServer ...
+// NewServer creates a new Server.
 func NewServer(mux *chi.Mux, httpPort int, logger *zap.Logger) *Server {
 	return &Server{
 		mux:      mux,

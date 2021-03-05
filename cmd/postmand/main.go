@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/allisson/go-env"
@@ -70,29 +68,7 @@ func main() {
 				deliveryRepository := repository.NewDelivery(db)
 				pollingInterval := time.Duration(env.GetInt("POSTMAND_POLLING_INTERVAL", 1000)) * time.Millisecond
 				workerService := service.NewWorker(deliveryRepository, logger, pollingInterval)
-
-				// Graceful shutdown
-				idleConnsClosed := make(chan struct{})
-				go func() {
-					sigint := make(chan os.Signal, 1)
-
-					// interrupt signal sent from terminal
-					signal.Notify(sigint, os.Interrupt)
-					// sigterm signal sent from kubernetes
-					signal.Notify(sigint, syscall.SIGTERM)
-
-					<-sigint
-
-					// We received an interrupt signal, shut down.
-					workerService.Shutdown(c.Context)
-					close(idleConnsClosed)
-				}()
-
-				logger.Info("worker-started")
 				workerService.Run(c.Context)
-
-				<-idleConnsClosed
-
 				return nil
 			},
 		},

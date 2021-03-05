@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/allisson/postmand"
@@ -16,8 +19,7 @@ type Worker struct {
 	isStop             bool
 }
 
-// Run sending of webhooks until the Shutdown method is called.
-func (w *Worker) Run(ctx context.Context) {
+func (w *Worker) run(ctx context.Context) {
 	for {
 		// Break forloop if isStop is true.
 		if w.isStop {
@@ -49,6 +51,30 @@ func (w *Worker) Run(ctx context.Context) {
 	}
 
 	w.logger.Info("worker-shutdown-completed")
+}
+
+// Run sending of webhooks until the Shutdown method is called.
+func (w *Worker) Run(ctx context.Context) {
+	idleConnsClosed := make(chan struct{})
+	go func() {
+		sigint := make(chan os.Signal, 1)
+
+		// interrupt signal sent from terminal
+		signal.Notify(sigint, os.Interrupt)
+		// sigterm signal sent from kubernetes
+		signal.Notify(sigint, syscall.SIGTERM)
+
+		<-sigint
+
+		// We received an interrupt signal, shut down.
+		w.Shutdown(ctx)
+		close(idleConnsClosed)
+	}()
+
+	w.logger.Info("worker-started")
+	w.run(ctx)
+
+	<-idleConnsClosed
 }
 
 // Shutdown stops the forloop in Run method.
