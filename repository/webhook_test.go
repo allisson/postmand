@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -72,7 +71,7 @@ func TestTransaction(t *testing.T) {
 
 		options := postmand.RepositoryGetOptions{Filters: map[string]interface{}{"id": webhook.ID}}
 		_, err = th.webhookRepository.Get(ctx, options)
-		assert.Equal(t, sql.ErrNoRows, err)
+		assert.Equal(t, postmand.ErrWebhookNotFound, err)
 	})
 
 	t.Run("Get webhook", func(t *testing.T) {

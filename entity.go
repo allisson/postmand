@@ -41,7 +41,6 @@ type Webhook struct {
 // Validate implements ozzo validation Validatable interface
 func (w Webhook) Validate() error {
 	return validation.ValidateStruct(&w,
-		validation.Field(&w.ID, validation.Required, is.UUIDv4),
 		validation.Field(&w.Name, validation.Required, validation.Length(3, 255)),
 		validation.Field(&w.URL, validation.Required, is.URL),
 		validation.Field(&w.ContentType, validation.Required, validation.In("application/x-www-form-urlencoded", "application/json")),
@@ -68,10 +67,7 @@ type Delivery struct {
 // Validate implements ozzo validation Validatable interface
 func (d Delivery) Validate() error {
 	return validation.ValidateStruct(&d,
-		validation.Field(&d.ID, validation.Required, is.UUIDv4),
 		validation.Field(&d.WebhookID, validation.Required, is.UUIDv4),
-		validation.Field(&d.ScheduledAt, validation.Required),
-		validation.Field(&d.Status, validation.Required, validation.In(DeliveryStatusPending, DeliveryStatusSucceeded, DeliveryStatusFailed)),
 	)
 }
 

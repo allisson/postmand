@@ -21,7 +21,7 @@ func TestWebhook(t *testing.T) {
 		{
 			"required fields",
 			Webhook{},
-			`{"content_type":"cannot be blank","delivery_attempt_timeout":"cannot be blank","id":"must be a valid UUID v4","max_delivery_attempts":"cannot be blank","name":"cannot be blank","retry_max_backoff":"cannot be blank","retry_min_backoff":"cannot be blank","url":"cannot be blank","valid_status_codes":"cannot be blank"}`,
+			`{"content_type":"cannot be blank","delivery_attempt_timeout":"cannot be blank","max_delivery_attempts":"cannot be blank","name":"cannot be blank","retry_max_backoff":"cannot be blank","retry_min_backoff":"cannot be blank","url":"cannot be blank","valid_status_codes":"cannot be blank"}`,
 		},
 		{
 			"Short name",
@@ -73,12 +73,7 @@ func TestDelivery(t *testing.T) {
 		{
 			"required fields",
 			Delivery{},
-			`{"id":"must be a valid UUID v4","scheduled_at":"cannot be blank","status":"cannot be blank","webhook_id":"must be a valid UUID v4"}`,
-		},
-		{
-			"invalid status option",
-			Delivery{ID: uuid.New(), WebhookID: uuid.New(), ScheduledAt: time.Now().UTC(), Status: "error"},
-			`{"status":"must be a valid value"}`,
+			`{"webhook_id":"must be a valid UUID v4"}`,
 		},
 	}
 	for _, tt := range tests {
