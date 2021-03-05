@@ -79,10 +79,13 @@ func main() {
 			Action: func(c *cli.Context) error {
 				webhookRepository := repository.NewWebhook(db)
 				deliveryRepository := repository.NewDelivery(db)
+				deliveryAttemptRepository := repository.NewDeliveryAttempt(db)
 				webhookService := service.NewWebhook(webhookRepository)
 				deliveryService := service.NewDelivery(deliveryRepository)
+				deliveryAttemptService := service.NewDeliveryAttempt(deliveryAttemptRepository)
 				webhookHandler := handler.NewWebhook(webhookService, logger)
 				deliveryHandler := handler.NewDelivery(deliveryService, logger)
+				deliveryAttemptHandler := handler.NewDeliveryAttempt(deliveryAttemptService, logger)
 
 				mux := http.NewRouter(logger)
 				mux.Route("/v1/webhooks", func(r chi.Router) {
@@ -97,6 +100,10 @@ func main() {
 					r.Post("/", deliveryHandler.Create)
 					r.Get("/{delivery_id}", deliveryHandler.Get)
 					r.Delete("/{delivery_id}", deliveryHandler.Delete)
+				})
+				mux.Route("/v1/delivery-attempts", func(r chi.Router) {
+					r.Get("/", deliveryAttemptHandler.List)
+					r.Get("/{delivery_attempt_id}", deliveryAttemptHandler.Get)
 				})
 
 				server := http.NewServer(mux, env.GetInt("POSTMAND_HTTP_PORT", 8000), logger)
