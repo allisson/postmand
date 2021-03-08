@@ -17,6 +17,16 @@ import (
 	"go.uber.org/zap"
 )
 
+func healthcheckServer(db *sqlx.DB, logger *zap.Logger) {
+	pingRepository := repository.NewPing(db)
+	pingService := service.NewPing(pingRepository)
+	pingHandler := handler.NewPing(pingService, logger)
+	mux := http.NewRouter(logger)
+	mux.Get("/healthz", pingHandler.Healthz)
+	server := http.NewServer(mux, env.GetInt("POSTMAND_HEALTH_CHECK_HTTP_PORT", 8000), logger)
+	server.Run()
+}
+
 func main() {
 	// Setup logger
 	logger, err := zap.NewProduction()
@@ -65,6 +75,9 @@ func main() {
 			Aliases: []string{"w"},
 			Usage:   "executes worker to dispatch webhooks",
 			Action: func(c *cli.Context) error {
+				// Start health check
+				go healthcheckServer(db, logger)
+
 				deliveryRepository := repository.NewDelivery(db)
 				pollingInterval := time.Duration(env.GetInt("POSTMAND_POLLING_INTERVAL", 1000)) * time.Millisecond
 				workerService := service.NewWorker(deliveryRepository, logger, pollingInterval)
@@ -77,12 +90,20 @@ func main() {
 			Aliases: []string{"s"},
 			Usage:   "executes http server",
 			Action: func(c *cli.Context) error {
+				// Start health check
+				go healthcheckServer(db, logger)
+
+				// Create repositories
 				webhookRepository := repository.NewWebhook(db)
 				deliveryRepository := repository.NewDelivery(db)
 				deliveryAttemptRepository := repository.NewDeliveryAttempt(db)
+
+				// Create services
 				webhookService := service.NewWebhook(webhookRepository)
 				deliveryService := service.NewDelivery(deliveryRepository)
 				deliveryAttemptService := service.NewDeliveryAttempt(deliveryAttemptRepository)
+
+				// Create http handlers
 				webhookHandler := handler.NewWebhook(webhookService, logger)
 				deliveryHandler := handler.NewDelivery(deliveryService, logger)
 				deliveryAttemptHandler := handler.NewDeliveryAttempt(deliveryAttemptService, logger)

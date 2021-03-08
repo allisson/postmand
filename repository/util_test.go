@@ -21,6 +21,7 @@ type testHelper struct {
 	webhookRepository         *Webhook
 	deliveryRepository        *Delivery
 	deliveryAttemptRepository *DeliveryAttempt
+	pingRepository            *Ping
 }
 
 func newTestHelper() testHelper {
@@ -31,5 +32,6 @@ func newTestHelper() testHelper {
 		webhookRepository:         NewWebhook(db),
 		deliveryRepository:        NewDelivery(db),
 		deliveryAttemptRepository: NewDeliveryAttempt(db),
+		pingRepository:            NewPing(db),
 	}
 }

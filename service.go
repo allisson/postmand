@@ -36,3 +36,8 @@ type DeliveryAttemptService interface {
 	Get(ctx context.Context, getOptions RepositoryGetOptions) (*DeliveryAttempt, error)
 	List(ctx context.Context, listOptions RepositoryListOptions) ([]*DeliveryAttempt, error)
 }
+
+// PingService is the interface that will be used to perform ping operation against database.
+type PingService interface {
+	Run(ctx context.Context) error
+}
