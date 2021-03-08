@@ -26,4 +26,10 @@ db-migrate: download-golang-migrate-binary
 db-test-migrate: download-golang-migrate-binary
 	./migrate.$(PLATFORM)-amd64 -source file://db/migrations -database ${POSTMAND_TEST_DATABASE_URL} up
 
-.PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate
+run-server:
+	go run cmd/postmand/main.go server
+
+run-worker:
+	go run cmd/postmand/main.go worker
+
+.PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate run-server run-worker
