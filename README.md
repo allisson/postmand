@@ -231,8 +231,27 @@ curl --location --request GET 'http://localhost:8000/v1/delivery-attempts/d72719
 }
 ```
 
+### Health check
+
+The health check server is running on port defined by envvar POSTMAND_HEALTH_CHECK_HTTP_PORT (defaults to 8001).
+
+```bash
+curl --location --request GET 'http://localhost:8001/healthz'
+```
+
+```javascript
+{
+  "success":true
+}
+```
+
+### Environment variables
+
+All environment variables is defined on file local.env.
+
 ## How to build docker image
 
 ```
 docker build -f Dockerfile -t postmand .
 ```
+
