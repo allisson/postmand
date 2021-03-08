@@ -25,3 +25,6 @@ migrate.linux-amd64
 
 # dot env
 .env
+
+# goreleaser
+dist/
