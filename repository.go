@@ -46,3 +46,8 @@ type DeliveryAttemptRepository interface {
 type MigrationRepository interface {
 	Run(ctx context.Context) error
 }
+
+// PingRepository is the interface that will be used to run ping against database.
+type PingRepository interface {
+	Run(ctx context.Context) error
+}

@@ -3,7 +3,7 @@ PLATFORM := $(shell uname | tr A-Z a-z)
 lint:
 	if [ ! -f ./bin/golangci-lint ] ; \
 	then \
-		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.37.1; \
+		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.38.0; \
 	fi;
 	./bin/golangci-lint run
 
@@ -26,4 +26,4 @@ db-migrate: download-golang-migrate-binary
 db-test-migrate: download-golang-migrate-binary
 	./migrate.$(PLATFORM)-amd64 -source file://db/migrations -database ${POSTMAND_TEST_DATABASE_URL} up
 
-.PHONY: lint test download-golang-migrate-binary db-migrate db-test-migrate
+.PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate
