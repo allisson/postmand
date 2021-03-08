@@ -7,11 +7,13 @@ import (
 	"github.com/allisson/postmand/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"go.uber.org/zap"
 )
 
 func TestMigration(t *testing.T) {
+	logger, _ := zap.NewDevelopment()
 	migrationRepository := &mocks.MigrationRepository{}
-	migrationService := NewMigration(migrationRepository)
+	migrationService := NewMigration(migrationRepository, logger)
 	migrationRepository.On("Run", mock.Anything).Return(nil)
 	ctx := context.Background()
 	err := migrationService.Run(ctx)

@@ -23,7 +23,7 @@ type Delivery struct {
 
 // List deliveries.
 func (d Delivery) List(w http.ResponseWriter, r *http.Request) {
-	listOptions, err := makeListOptions(r, []string{})
+	listOptions, err := makeListOptions(r, []string{"webhook_id", "status"})
 	if err != nil {
 		er := errorResponses["internal_server_error"]
 		makeErrorResponse(w, &er, d.logger)

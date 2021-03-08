@@ -4,19 +4,29 @@ import (
 	"context"
 
 	"github.com/allisson/postmand"
+	"go.uber.org/zap"
 )
 
 // Migration implements postmand.MigrationService interface.
 type Migration struct {
 	migrationRepo postmand.MigrationRepository
+	logger        *zap.Logger
 }
 
 // Run database migrations.
 func (m Migration) Run(ctx context.Context) error {
-	return m.migrationRepo.Run(ctx)
+	m.logger.Info("migration-started")
+	if err := m.migrationRepo.Run(ctx); err != nil {
+		m.logger.Error("migration-error", zap.Error(err))
+	}
+	m.logger.Info("migration-completed")
+	return nil
 }
 
 // NewMigration will create an implementation of postmand.MigrationService.
-func NewMigration(migrationRepo postmand.MigrationRepository) *Migration {
-	return &Migration{migrationRepo: migrationRepo}
+func NewMigration(migrationRepo postmand.MigrationRepository, logger *zap.Logger) *Migration {
+	return &Migration{
+		migrationRepo: migrationRepo,
+		logger:        logger,
+	}
 }

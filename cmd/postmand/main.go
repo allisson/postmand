@@ -23,7 +23,7 @@ func healthcheckServer(db *sqlx.DB, logger *zap.Logger) {
 	pingHandler := handler.NewPing(pingService, logger)
 	mux := http.NewRouter(logger)
 	mux.Get("/healthz", pingHandler.Healthz)
-	server := http.NewServer(mux, env.GetInt("POSTMAND_HEALTH_CHECK_HTTP_PORT", 8000), logger)
+	server := http.NewServer(mux, env.GetInt("POSTMAND_HEALTH_CHECK_HTTP_PORT", 8001), logger)
 	server.Run()
 }
 
@@ -66,7 +66,7 @@ func main() {
 					db,
 					env.GetString("POSTMAND_DATABASE_MIGRATION_DIR", "file:///db/migrations"),
 				)
-				migrationService := service.NewMigration(migrationRepository)
+				migrationService := service.NewMigration(migrationRepository, logger)
 				return migrationService.Run(c.Context)
 			},
 		},
