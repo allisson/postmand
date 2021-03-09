@@ -13,7 +13,7 @@ type deliveryList struct {
 	Deliveries []*postmand.Delivery `json:"deliveries"`
 	Limit      int                  `json:"limit"`
 	Offset     int                  `json:"offset"`
-}
+} //@name DeliveryList
 
 // Delivery implements rest interface for delivery.
 type Delivery struct {
@@ -22,6 +22,18 @@ type Delivery struct {
 }
 
 // List deliveries.
+// List godoc
+// @Summary List deliveries
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param limit query int true "The limit indicates the maximum number of items to return"
+// @Param offset query int true "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param webhook_id query string false "Filter by webhook_id"
+// @Param status query string false "Filter by status"
+// @Success 200 {object} deliveryList
+// @Failure 500 {object} errorResponse
+// @Router /deliveries [get]
 func (d Delivery) List(w http.ResponseWriter, r *http.Request) {
 	listOptions, err := makeListOptions(r, []string{"webhook_id", "status"})
 	if err != nil {
@@ -56,6 +68,16 @@ func (d Delivery) List(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get delivery.
+// Get godoc
+// @Summary Show a delivery
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param delivery_id path string true "Delivery ID"
+// @Success 200 {object} postmand.Delivery
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /deliveries/{delivery_id} [get]
 func (d Delivery) Get(w http.ResponseWriter, r *http.Request) {
 	deliveryID, err := uuid.Parse(chi.URLParam(r, "delivery_id"))
 	if err != nil {
@@ -89,6 +111,16 @@ func (d Delivery) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create delivery.
+// Create godoc
+// @Summary Add an delivery
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param delivery body postmand.Delivery true "Add delivery"
+// @Success 201 {object} postmand.Delivery
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /deliveries [post]
 func (d Delivery) Create(w http.ResponseWriter, r *http.Request) {
 	// Parse request
 	delivery := postmand.Delivery{}
@@ -114,6 +146,16 @@ func (d Delivery) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete delivery.
+// Delete godoc
+// @Summary Delete an delivery
+// @Tags deliveries
+// @Accept json
+// @Produce json
+// @Param delivery_id path string true "Delivery ID"
+// @Success 204 "No Content"
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /deliveries/{delivery_id} [delete]
 func (d Delivery) Delete(w http.ResponseWriter, r *http.Request) {
 	deliveryID, err := uuid.Parse(chi.URLParam(r, "delivery_id"))
 	if err != nil {
