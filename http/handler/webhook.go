@@ -13,7 +13,7 @@ type webhookList struct {
 	Webhooks []*postmand.Webhook `json:"webhooks"`
 	Limit    int                 `json:"limit"`
 	Offset   int                 `json:"offset"`
-}
+} //@name WebhookList
 
 // Webhook implements rest interface for webhook.
 type Webhook struct {
@@ -22,6 +22,16 @@ type Webhook struct {
 }
 
 // List webhooks.
+// List godoc
+// @Summary List webhooks
+// @Tags webhooks
+// @Accept json
+// @Produce json
+// @Param limit query int false "The limit indicates the maximum number of items to return"
+// @Param offset query int false "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Success 200 {object} webhookList
+// @Failure 500 {object} errorResponse
+// @Router /webhooks [get]
 func (wh Webhook) List(w http.ResponseWriter, r *http.Request) {
 	listOptions, err := makeListOptions(r, []string{})
 	if err != nil {
@@ -56,6 +66,16 @@ func (wh Webhook) List(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get webhook.
+// Get godoc
+// @Summary Show a webhook
+// @Tags webhooks
+// @Accept json
+// @Produce json
+// @Param webhook_id path string true "Webhook ID"
+// @Success 200 {object} postmand.Webhook
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /webhooks/{webhook_id} [get]
 func (wh Webhook) Get(w http.ResponseWriter, r *http.Request) {
 	webhookID, err := uuid.Parse(chi.URLParam(r, "webhook_id"))
 	if err != nil {
@@ -89,6 +109,16 @@ func (wh Webhook) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create webhook.
+// Create godoc
+// @Summary Add an webhook
+// @Tags webhooks
+// @Accept json
+// @Produce json
+// @Param webhook body postmand.Webhook true "Add webhook"
+// @Success 201 {object} postmand.Webhook
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /webhooks [post]
 func (wh Webhook) Create(w http.ResponseWriter, r *http.Request) {
 	// Parse request
 	webhook := postmand.Webhook{}
@@ -114,6 +144,18 @@ func (wh Webhook) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 // Update webhook.
+// Update godoc
+// @Summary Update an webhook
+// @Tags webhooks
+// @Accept json
+// @Produce json
+// @Param webhook_id path string true "Webhook ID"
+// @Param webhook body postmand.Webhook true "Update webhook"
+// @Success 200 {object} postmand.Webhook
+// @Failure 400 {object} errorResponse
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /webhooks/{webhook_id} [put]
 func (wh Webhook) Update(w http.ResponseWriter, r *http.Request) {
 	webhookID, err := uuid.Parse(chi.URLParam(r, "webhook_id"))
 	if err != nil {
@@ -147,6 +189,16 @@ func (wh Webhook) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete webhook.
+// Delete godoc
+// @Summary Delete an webhook
+// @Tags webhooks
+// @Accept json
+// @Produce json
+// @Param webhook_id path string true "Webhook ID"
+// @Success 204 "No Content"
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /webhooks/{webhook_id} [delete]
 func (wh Webhook) Delete(w http.ResponseWriter, r *http.Request) {
 	webhookID, err := uuid.Parse(chi.URLParam(r, "webhook_id"))
 	if err != nil {

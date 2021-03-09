@@ -33,11 +33,6 @@ func TestWebhook(t *testing.T) {
 			Webhook{ID: uuid.New(), Name: strings.Repeat("A", 300), URL: "https://httpbin.org/post", ContentType: "application/json", ValidStatusCodes: pq.Int32Array{200, 201}, MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
 			`{"name":"the length must be between 3 and 255"}`,
 		},
-		{
-			"Content type invalid option",
-			Webhook{ID: uuid.New(), Name: "AAA", URL: "https://httpbin.org/post", ContentType: "text/html", ValidStatusCodes: pq.Int32Array{200, 201}, MaxDeliveryAttempts: 1, DeliveryAttemptTimeout: 1, RetryMinBackoff: 1, RetryMaxBackoff: 1},
-			`{"content_type":"must be a valid value"}`,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.kind, func(t *testing.T) {

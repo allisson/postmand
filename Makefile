@@ -32,4 +32,7 @@ run-server:
 run-worker:
 	go run cmd/postmand/main.go worker
 
-.PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate run-server run-worker
+swag-init:
+	swag init -g cmd/postmand/main.go --parseDependency
+
+.PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate run-server run-worker swag-init

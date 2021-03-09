@@ -45,4 +45,4 @@ type errorResponse struct {
 	Message    string `json:"message"`
 	Details    string `json:"details,omitempty"`
 	StatusCode int    `json:"-"`
-}
+} //@name Error

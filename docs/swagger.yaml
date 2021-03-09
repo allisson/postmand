@@ -1,0 +1,206 @@
+basePath: /v1
+definitions:
+  Error:
+    properties:
+      code:
+        type: integer
+      details:
+        type: string
+      message:
+        type: string
+    type: object
+  Webhook:
+    properties:
+      active:
+        type: boolean
+      content_type:
+        type: string
+      created_at:
+        type: string
+      delivery_attempt_timeout:
+        type: integer
+      id:
+        type: string
+      max_delivery_attempts:
+        type: integer
+      name:
+        type: string
+      retry_max_backoff:
+        type: integer
+      retry_min_backoff:
+        type: integer
+      secret_token:
+        type: string
+      updated_at:
+        type: string
+      url:
+        type: string
+      valid_status_codes:
+        items:
+          type: integer
+        type: array
+    type: object
+  WebhookList:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+      webhooks:
+        items:
+          $ref: '#/definitions/Webhook'
+        type: array
+    type: object
+info:
+  contact: {}
+  description: Simple webhook delivery system powered by Golang and PostgreSQL.
+  title: Postmand API
+  version: "1.0"
+paths:
+  /webhooks:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: The limit indicates the maximum number of items to return
+        in: query
+        name: limit
+        type: integer
+      - description: The offset indicates the starting position of the query in relation
+          to the complete set of unpaginated items
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/WebhookList'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: List webhooks
+      tags:
+      - webhooks
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add webhook
+        in: body
+        name: webhook
+        required: true
+        schema:
+          $ref: '#/definitions/Webhook'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Webhook'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Add an webhook
+      tags:
+      - webhooks
+  /webhooks/{webhook_id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhook_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Delete an webhook
+      tags:
+      - webhooks
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhook_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Webhook'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Show a webhook
+      tags:
+      - webhooks
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhook_id
+        required: true
+        type: string
+      - description: Update webhook
+        in: body
+        name: webhook
+        required: true
+        schema:
+          $ref: '#/definitions/Webhook'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Webhook'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Update an webhook
+      tags:
+      - webhooks
+swagger: "2.0"
