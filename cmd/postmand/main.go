@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/allisson/go-env"
+	_ "github.com/allisson/postmand/docs"
 	"github.com/allisson/postmand/http"
 	"github.com/allisson/postmand/http/handler"
 	"github.com/allisson/postmand/repository"
@@ -13,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 )
@@ -27,6 +29,10 @@ func healthcheckServer(db *sqlx.DB, logger *zap.Logger) {
 	server.Run()
 }
 
+// @title Postmand API
+// @version 1.0
+// @description Simple webhook delivery system powered by Golang and PostgreSQL.
+// @BasePath /v1
 func main() {
 	// Setup logger
 	logger, err := zap.NewProduction()
@@ -108,6 +114,7 @@ func main() {
 				deliveryHandler := handler.NewDelivery(deliveryService, logger)
 				deliveryAttemptHandler := handler.NewDeliveryAttempt(deliveryAttemptService, logger)
 
+				httpPort := env.GetInt("POSTMAND_HTTP_PORT", 8000)
 				mux := http.NewRouter(logger)
 				mux.Route("/v1/webhooks", func(r chi.Router) {
 					r.Get("/", webhookHandler.List)
@@ -126,8 +133,11 @@ func main() {
 					r.Get("/", deliveryAttemptHandler.List)
 					r.Get("/{delivery_attempt_id}", deliveryAttemptHandler.Get)
 				})
+				mux.Get("/swagger/*", httpSwagger.Handler(
+					httpSwagger.URL("/swagger/doc.json"), //The url pointing to API definition"
+				))
 
-				server := http.NewServer(mux, env.GetInt("POSTMAND_HTTP_PORT", 8000), logger)
+				server := http.NewServer(mux, httpPort, logger)
 				server.Run()
 
 				return nil

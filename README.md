@@ -47,6 +47,23 @@ make run-migrate # create database schema
 make run-server # run the server
 ```
 
+###  Run the worker
+
+The worker is responsible to delivery content to the webhooks.
+
+#### Docker
+
+```bash
+docker run --env POSTMAND_DATABASE_URL='postgres://user:pass@host.docker.internal:5432/postmand?sslmode=disable' allisson/postmand worker
+```
+
+#### Local
+
+```bash
+make run-worker
+go run cmd/postmand/main.go worker
+```
+
 ### Create a new webhook
 
 The fields delivery_attempt_timeout/retry_min_backoff/retry_max_backoff are in seconds.
@@ -114,29 +131,6 @@ curl --location --request POST 'http://localhost:8000/v1/deliveries' \
   "created_at":"2021-03-08T20:43:49.986771Z",
   "updated_at":"2021-03-08T20:43:49.986771Z"
 }
-```
-
-###  Run the worker
-
-The worker is responsible to delivery content to the webhooks.
-
-#### Docker
-
-```bash
-docker run --env POSTMAND_DATABASE_URL='postgres://user:pass@host.docker.internal:5432/postmand?sslmode=disable' allisson/postmand worker
-{"level":"info","ts":1615236411.115703,"caller":"service/worker.go:74","msg":"worker-started"}
-{"level":"info","ts":1615236411.1158803,"caller":"http/server.go:60","msg":"http-server-listen-and-server"}
-{"level":"info","ts":1615236411.687701,"caller":"service/worker.go:42","msg":"worker-delivery-attempt-created","id":"d72719d6-5a79-4df7-a2c2-2029ab0e1848","webhook_id":"a6e9a525-ac5a-488c-b118-bd7327ce6d8d","delivery_id":"bc76122c-e56b-45c7-8dc3-b80a861191d5","response_status_code":200,"execution_duration":547,"success":true}
-```
-
-#### Local
-
-```bash
-make run-worker
-go run cmd/postmand/main.go worker
-{"level":"info","ts":1615236411.115703,"caller":"service/worker.go:74","msg":"worker-started"}
-{"level":"info","ts":1615236411.1158803,"caller":"http/server.go:60","msg":"http-server-listen-and-server"}
-{"level":"info","ts":1615236411.687701,"caller":"service/worker.go:42","msg":"worker-delivery-attempt-created","id":"d72719d6-5a79-4df7-a2c2-2029ab0e1848","webhook_id":"a6e9a525-ac5a-488c-b118-bd7327ce6d8d","delivery_id":"bc76122c-e56b-45c7-8dc3-b80a861191d5","response_status_code":200,"execution_duration":547,"success":true}
 ```
 
 ### Get deliveries
@@ -231,6 +225,10 @@ curl --location --request GET 'http://localhost:8000/v1/delivery-attempts/d72719
 }
 ```
 
+### Swagger docs
+
+The swagger spec is available at http://localhost:8000/swagger/index.html.
+
 ### Health check
 
 The health check server is running on port defined by envvar POSTMAND_HEALTH_CHECK_HTTP_PORT (defaults to 8001).
@@ -254,4 +252,3 @@ All environment variables is defined on file local.env.
 ```
 docker build -f Dockerfile -t postmand .
 ```
-

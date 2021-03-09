@@ -36,14 +36,14 @@ type Webhook struct {
 	RetryMaxBackoff        int           `json:"retry_max_backoff" db:"retry_max_backoff"`
 	CreatedAt              time.Time     `json:"created_at" db:"created_at"`
 	UpdatedAt              time.Time     `json:"updated_at" db:"updated_at"`
-}
+} //@name Webhook
 
 // Validate implements ozzo validation Validatable interface
 func (w Webhook) Validate() error {
 	return validation.ValidateStruct(&w,
 		validation.Field(&w.Name, validation.Required, validation.Length(3, 255)),
 		validation.Field(&w.URL, validation.Required, is.URL),
-		validation.Field(&w.ContentType, validation.Required, validation.In("application/x-www-form-urlencoded", "application/json")),
+		validation.Field(&w.ContentType, validation.Required),
 		validation.Field(&w.ValidStatusCodes, validation.Required),
 		validation.Field(&w.MaxDeliveryAttempts, validation.Required, validation.Min(1)),
 		validation.Field(&w.DeliveryAttemptTimeout, validation.Required, validation.Min(1)),
