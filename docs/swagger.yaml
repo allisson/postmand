@@ -1,5 +1,69 @@
 basePath: /v1
 definitions:
+  Delivery:
+    properties:
+      created_at:
+        type: string
+      delivery_attempts:
+        type: integer
+      id:
+        type: string
+      payload:
+        type: string
+      scheduled_at:
+        type: string
+      status:
+        type: string
+      updated_at:
+        type: string
+      webhook_id:
+        type: string
+    type: object
+  DeliveryAttempt:
+    properties:
+      created_at:
+        type: string
+      delivery_id:
+        type: string
+      error:
+        type: string
+      execution_duration:
+        type: integer
+      id:
+        type: string
+      raw_request:
+        type: string
+      raw_response:
+        type: string
+      response_status_code:
+        type: integer
+      success:
+        type: boolean
+      webhook_id:
+        type: string
+    type: object
+  DeliveryAttemptList:
+    properties:
+      delivery_attempts:
+        items:
+          $ref: '#/definitions/DeliveryAttempt'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  DeliveryList:
+    properties:
+      deliveries:
+        items:
+          $ref: '#/definitions/Delivery'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
   Error:
     properties:
       code:
@@ -57,6 +121,195 @@ info:
   title: Postmand API
   version: "1.0"
 paths:
+  /deliveries:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: The limit indicates the maximum number of items to return
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: The offset indicates the starting position of the query in relation
+          to the complete set of unpaginated items
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: Filter by webhook_id
+        in: query
+        name: webhook_id
+        type: string
+      - description: Filter by status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DeliveryList'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: List deliveries
+      tags:
+      - deliveries
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add delivery
+        in: body
+        name: delivery
+        required: true
+        schema:
+          $ref: '#/definitions/Delivery'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Delivery'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Add an delivery
+      tags:
+      - deliveries
+  /deliveries/{delivery_id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: delivery_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Delete an delivery
+      tags:
+      - deliveries
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delivery ID
+        in: path
+        name: delivery_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Delivery'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Show a delivery
+      tags:
+      - deliveries
+  /delivery-attempts:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: The limit indicates the maximum number of items to return
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: The offset indicates the starting position of the query in relation
+          to the complete set of unpaginated items
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: Filter by webhook_id
+        in: query
+        name: webhook_id
+        type: string
+      - description: Filter by delivery_id
+        in: query
+        name: delivery_id
+        type: string
+      - description: Filter by success
+        in: query
+        name: success
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DeliveryAttemptList'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: List delivery attempts
+      tags:
+      - delivery-attempts
+  /delivery-attempts/{delivery_attempt_id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Delivery Attempt ID
+        in: path
+        name: delivery_attempt_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/DeliveryAttempt'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Show a delivery attempt
+      tags:
+      - delivery-attempts
   /webhooks:
     get:
       consumes:
@@ -65,11 +318,13 @@ paths:
       - description: The limit indicates the maximum number of items to return
         in: query
         name: limit
+        required: true
         type: integer
       - description: The offset indicates the starting position of the query in relation
           to the complete set of unpaginated items
         in: query
         name: offset
+        required: true
         type: integer
       produces:
       - application/json

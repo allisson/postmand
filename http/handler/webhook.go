@@ -27,8 +27,8 @@ type Webhook struct {
 // @Tags webhooks
 // @Accept json
 // @Produce json
-// @Param limit query int false "The limit indicates the maximum number of items to return"
-// @Param offset query int false "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param limit query int true "The limit indicates the maximum number of items to return"
+// @Param offset query int true "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
 // @Success 200 {object} webhookList
 // @Failure 500 {object} errorResponse
 // @Router /webhooks [get]

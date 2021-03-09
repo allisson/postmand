@@ -62,7 +62,7 @@ type Delivery struct {
 	Status           string    `json:"status" db:"status"`
 	CreatedAt        time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at" db:"updated_at"`
-}
+} //@name Delivery
 
 // Validate implements ozzo validation Validatable interface
 func (d Delivery) Validate() error {
@@ -83,4 +83,4 @@ type DeliveryAttempt struct {
 	Success            bool      `json:"success" db:"success"`
 	Error              string    `json:"error" db:"error"`
 	CreatedAt          time.Time `json:"created_at" db:"created_at"`
-}
+} //@name DeliveryAttempt

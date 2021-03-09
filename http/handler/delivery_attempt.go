@@ -13,7 +13,7 @@ type deliveryAttemptList struct {
 	DeliveryAttempts []*postmand.DeliveryAttempt `json:"delivery_attempts"`
 	Limit            int                         `json:"limit"`
 	Offset           int                         `json:"offset"`
-}
+} //@name DeliveryAttemptList
 
 // DeliveryAttempt implements rest interface for delivery attempt.
 type DeliveryAttempt struct {
@@ -22,6 +22,19 @@ type DeliveryAttempt struct {
 }
 
 // List delivery attempts.
+// List godoc
+// @Summary List delivery attempts
+// @Tags delivery-attempts
+// @Accept json
+// @Produce json
+// @Param limit query int true "The limit indicates the maximum number of items to return"
+// @Param offset query int true "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param webhook_id query string false "Filter by webhook_id"
+// @Param delivery_id query string false "Filter by delivery_id"
+// @Param success query string false "Filter by success"
+// @Success 200 {object} deliveryAttemptList
+// @Failure 500 {object} errorResponse
+// @Router /delivery-attempts [get]
 func (d DeliveryAttempt) List(w http.ResponseWriter, r *http.Request) {
 	listOptions, err := makeListOptions(r, []string{"webhook_id", "delivery_id", "success"})
 	if err != nil {
@@ -56,6 +69,16 @@ func (d DeliveryAttempt) List(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get delivery attempt.
+// Get godoc
+// @Summary Show a delivery attempt
+// @Tags delivery-attempts
+// @Accept json
+// @Produce json
+// @Param delivery_attempt_id path string true "Delivery Attempt ID"
+// @Success 200 {object} postmand.DeliveryAttempt
+// @Failure 404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /delivery-attempts/{delivery_attempt_id} [get]
 func (d DeliveryAttempt) Get(w http.ResponseWriter, r *http.Request) {
 	deliveryAttemptID, err := uuid.Parse(chi.URLParam(r, "delivery_attempt_id"))
 	if err != nil {
