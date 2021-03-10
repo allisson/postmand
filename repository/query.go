@@ -2,6 +2,7 @@ package repository
 
 import (
 	"log"
+	"strings"
 
 	"github.com/allisson/postmand"
 	"github.com/huandu/go-sqlbuilder"
@@ -21,7 +22,24 @@ func listQuery(tableName string, listOptions postmand.RepositoryListOptions) (st
 	sb := sqlbuilder.PostgreSQL.NewSelectBuilder()
 	sb.Select("*").From(tableName).Limit(listOptions.Limit).Offset(listOptions.Offset)
 	for key, value := range listOptions.Filters {
-		sb.Where(sb.Equal(key, value))
+		if strings.Contains(key, ".") {
+			split := strings.Split(key, ".")
+			parsedKey := split[0]
+			compare := split[1]
+			switch compare {
+			case "gt":
+				sb.Where(sb.GreaterThan(parsedKey, value))
+			case "gte":
+				sb.Where(sb.GreaterEqualThan(parsedKey, value))
+			case "lt":
+				sb.Where(sb.LessThan(parsedKey, value))
+			case "lte":
+				sb.Where(sb.LessEqualThan(parsedKey, value))
+			}
+		} else {
+			sb.Where(sb.Equal(key, value))
+		}
+
 	}
 	if listOptions.OrderBy != "" && listOptions.Order != "" {
 		sb.OrderBy(listOptions.OrderBy)

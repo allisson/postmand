@@ -6,12 +6,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/allisson/postmand"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
 )
+
+type requestFilters struct {
+	Limit        int         `json:"limit,string"`
+	Offset       int         `json:"offset,string"`
+	Active       bool        `json:"active,string"`
+	Success      bool        `json:"success,string"`
+	WebhookID    postmand.ID `json:"webhook_id"`
+	DeliveryID   postmand.ID `json:"delivery_id"`
+	Status       string      `json:"status"`
+	CreatedAtGt  time.Time   `json:"created_at.gt"`
+	CreatedAtGte time.Time   `json:"created_at.gte"`
+	CreatedAtLt  time.Time   `json:"created_at.lt"`
+	CreatedAtLte time.Time   `json:"created_at.lte"`
+}
 
 func makeResponse(w http.ResponseWriter, body []byte, statusCode int, contentType string, logger *zap.Logger) {
 	w.Header().Set("Content-Type", fmt.Sprintf("%s; charset=utf-8", contentType))
@@ -70,39 +84,47 @@ func readBodyJSON(r *http.Request, into interface{}, logger *zap.Logger) *errorR
 	return nil
 }
 
-func makeListOptions(r *http.Request, filters []string) (postmand.RepositoryListOptions, error) {
-	listOptions := postmand.RepositoryListOptions{}
-
+func requestBind(r *http.Request, into interface{}) error {
 	if err := r.ParseForm(); err != nil {
-		return listOptions, err
+		return err
 	}
 
-	// Parse limit and offset
-	limit := 50
-	offset := 0
-	if r.Form.Get("limit") != "" {
-		v, err := strconv.Atoi(r.Form.Get("limit"))
-		if err == nil && v <= limit {
-			limit = v
-		}
+	m := make(map[string]string)
+	for key := range r.Form {
+		m[key] = r.Form.Get(key)
 	}
-	if r.Form.Get("offset") != "" {
-		v, err := strconv.Atoi(r.Form.Get("offset"))
-		if err == nil {
-			offset = v
-		}
+	rawJSON, err := json.Marshal(m)
+	if err != nil {
+		return err
 	}
-	listOptions.Limit = limit
-	listOptions.Offset = offset
+	return json.Unmarshal(rawJSON, into)
+}
+
+func makeListOptions(r *http.Request, filters []string) postmand.RepositoryListOptions {
+	listOptions := postmand.RepositoryListOptions{
+		Limit:  50,
+		Offset: 0,
+	}
+	rf := requestFilters{}
+
+	if err := requestBind(r, &rf); err != nil {
+		return listOptions
+	}
+
+	if rf.Limit != 0 {
+		listOptions.Limit = rf.Limit
+	}
+	listOptions.Offset = rf.Offset
 
 	// Parse filters
 	f := make(map[string]interface{})
 	for _, filter := range filters {
-		if r.Form.Get(filter) != "" {
-			f[filter] = r.Form.Get(filter)
+		filterValue := r.Form.Get(filter)
+		if filterValue != "" {
+			f[filter] = filterValue
 		}
 	}
 	listOptions.Filters = f
 
-	return listOptions, nil
+	return listOptions
 }
