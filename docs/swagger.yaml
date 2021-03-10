@@ -129,21 +129,38 @@ paths:
       - description: The limit indicates the maximum number of items to return
         in: query
         name: limit
-        required: true
         type: integer
       - description: The offset indicates the starting position of the query in relation
           to the complete set of unpaginated items
         in: query
         name: offset
-        required: true
         type: integer
-      - description: Filter by webhook_id
+      - description: Filter by webhook_id field
         in: query
         name: webhook_id
         type: string
-      - description: Filter by status
+      - description: Filter by status field
         in: query
         name: status
+        type: string
+      - description: Return results where the created_at field is greater than this
+          value
+        in: query
+        name: created_at.gt
+        type: string
+      - description: Return results where the created_at field is greater than or
+          equal to this value
+        in: query
+        name: created_at.gte
+        type: string
+      - description: Return results where the created_at field is less than this value
+        in: query
+        name: created_at.lt
+        type: string
+      - description: Return results where the created_at field is less than or equal
+          to this value
+        in: query
+        name: created_at.lte
         type: string
       produces:
       - application/json
@@ -248,13 +265,11 @@ paths:
       - description: The limit indicates the maximum number of items to return
         in: query
         name: limit
-        required: true
         type: integer
       - description: The offset indicates the starting position of the query in relation
           to the complete set of unpaginated items
         in: query
         name: offset
-        required: true
         type: integer
       - description: Filter by webhook_id
         in: query
@@ -267,6 +282,25 @@ paths:
       - description: Filter by success
         in: query
         name: success
+        type: boolean
+      - description: Return results where the created_at field is greater than this
+          value
+        in: query
+        name: created_at.gt
+        type: string
+      - description: Return results where the created_at field is greater than or
+          equal to this value
+        in: query
+        name: created_at.gte
+        type: string
+      - description: Return results where the created_at field is less than this value
+        in: query
+        name: created_at.lt
+        type: string
+      - description: Return results where the created_at field is less than or equal
+          to this value
+        in: query
+        name: created_at.lte
         type: string
       produces:
       - application/json
@@ -318,14 +352,35 @@ paths:
       - description: The limit indicates the maximum number of items to return
         in: query
         name: limit
-        required: true
         type: integer
       - description: The offset indicates the starting position of the query in relation
           to the complete set of unpaginated items
         in: query
         name: offset
-        required: true
         type: integer
+      - description: Filter by active field
+        in: query
+        name: active
+        type: boolean
+      - description: Return results where the created_at field is greater than this
+          value
+        in: query
+        name: created_at.gt
+        type: string
+      - description: Return results where the created_at field is greater than or
+          equal to this value
+        in: query
+        name: created_at.gte
+        type: string
+      - description: Return results where the created_at field is less than this value
+        in: query
+        name: created_at.lt
+        type: string
+      - description: Return results where the created_at field is less than or equal
+          to this value
+        in: query
+        name: created_at.lte
+        type: string
       produces:
       - application/json
       responses:

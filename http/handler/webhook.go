@@ -27,18 +27,18 @@ type Webhook struct {
 // @Tags webhooks
 // @Accept json
 // @Produce json
-// @Param limit query int true "The limit indicates the maximum number of items to return"
-// @Param offset query int true "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param limit query int false "The limit indicates the maximum number of items to return"
+// @Param offset query int false "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param active query boolean false "Filter by active field"
+// @Param created_at.gt query string false "Return results where the created_at field is greater than this value"
+// @Param created_at.gte query string false "Return results where the created_at field is greater than or equal to this value"
+// @Param created_at.lt query string false "Return results where the created_at field is less than this value"
+// @Param created_at.lte query string false "Return results where the created_at field is less than or equal to this value"
 // @Success 200 {object} webhookList
 // @Failure 500 {object} errorResponse
 // @Router /webhooks [get]
 func (wh Webhook) List(w http.ResponseWriter, r *http.Request) {
-	listOptions, err := makeListOptions(r, []string{})
-	if err != nil {
-		er := errorResponses["internal_server_error"]
-		makeErrorResponse(w, &er, wh.logger)
-		return
-	}
+	listOptions := makeListOptions(r, []string{"active", "created_at.gt", "created_at.gte", "created_at.lt", "created_at.lte"})
 	listOptions.OrderBy = "name"
 	listOptions.Order = "asc"
 

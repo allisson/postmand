@@ -6,7 +6,7 @@ require (
 	github.com/DATA-DOG/go-txdb v0.1.3
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/allisson/go-env v0.3.0
-	github.com/go-chi/chi/v5 v5.0.0
+	github.com/go-chi/chi/v5 v5.0.1
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/google/uuid v1.2.0

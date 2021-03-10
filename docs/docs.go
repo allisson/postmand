@@ -41,26 +41,48 @@ var doc = `{
                         "type": "integer",
                         "description": "The limit indicates the maximum number of items to return",
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "The offset indicates the starting position of the query in relation to the complete set of unpaginated items",
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Filter by webhook_id",
+                        "description": "Filter by webhook_id field",
                         "name": "webhook_id",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Filter by status",
+                        "description": "Filter by status field",
                         "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than this value",
+                        "name": "created_at.gt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than or equal to this value",
+                        "name": "created_at.gte",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than this value",
+                        "name": "created_at.lt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than or equal to this value",
+                        "name": "created_at.lte",
                         "in": "query"
                     }
                 ],
@@ -221,15 +243,13 @@ var doc = `{
                         "type": "integer",
                         "description": "The limit indicates the maximum number of items to return",
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "The offset indicates the starting position of the query in relation to the complete set of unpaginated items",
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -244,9 +264,33 @@ var doc = `{
                         "in": "query"
                     },
                     {
-                        "type": "string",
+                        "type": "boolean",
                         "description": "Filter by success",
                         "name": "success",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than this value",
+                        "name": "created_at.gt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than or equal to this value",
+                        "name": "created_at.gte",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than this value",
+                        "name": "created_at.lt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than or equal to this value",
+                        "name": "created_at.lte",
                         "in": "query"
                     }
                 ],
@@ -326,15 +370,43 @@ var doc = `{
                         "type": "integer",
                         "description": "The limit indicates the maximum number of items to return",
                         "name": "limit",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
                         "description": "The offset indicates the starting position of the query in relation to the complete set of unpaginated items",
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Filter by active field",
+                        "name": "active",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than this value",
+                        "name": "created_at.gt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is greater than or equal to this value",
+                        "name": "created_at.gte",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than this value",
+                        "name": "created_at.lt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Return results where the created_at field is less than or equal to this value",
+                        "name": "created_at.lte",
+                        "in": "query"
                     }
                 ],
                 "responses": {

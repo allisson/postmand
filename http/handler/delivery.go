@@ -27,20 +27,19 @@ type Delivery struct {
 // @Tags deliveries
 // @Accept json
 // @Produce json
-// @Param limit query int true "The limit indicates the maximum number of items to return"
-// @Param offset query int true "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
-// @Param webhook_id query string false "Filter by webhook_id"
-// @Param status query string false "Filter by status"
+// @Param limit query int false "The limit indicates the maximum number of items to return"
+// @Param offset query int false "The offset indicates the starting position of the query in relation to the complete set of unpaginated items"
+// @Param webhook_id query string false "Filter by webhook_id field"
+// @Param status query string false "Filter by status field"
+// @Param created_at.gt query string false "Return results where the created_at field is greater than this value"
+// @Param created_at.gte query string false "Return results where the created_at field is greater than or equal to this value"
+// @Param created_at.lt query string false "Return results where the created_at field is less than this value"
+// @Param created_at.lte query string false "Return results where the created_at field is less than or equal to this value"
 // @Success 200 {object} deliveryList
 // @Failure 500 {object} errorResponse
 // @Router /deliveries [get]
 func (d Delivery) List(w http.ResponseWriter, r *http.Request) {
-	listOptions, err := makeListOptions(r, []string{"webhook_id", "status"})
-	if err != nil {
-		er := errorResponses["internal_server_error"]
-		makeErrorResponse(w, &er, d.logger)
-		return
-	}
+	listOptions := makeListOptions(r, []string{"webhook_id", "status", "created_at.gt", "created_at.gte", "created_at.lt", "created_at.lte"})
 	listOptions.OrderBy = "created_at"
 	listOptions.Order = "desc"
 
