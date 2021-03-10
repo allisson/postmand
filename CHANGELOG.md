@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/allisson/postmand/compare/v1.0.0...v1.1.0) (2021-03-10)
+
+
+### Features
+
+* Add filters by created_at field ([#25](https://www.github.com/allisson/postmand/issues/25)) ([ae19cda](https://www.github.com/allisson/postmand/commit/ae19cda025a014d5032111f4e0b237657a250462))
+
 ## 1.0.0 (2021-03-09)
 
 
