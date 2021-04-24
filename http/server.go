@@ -3,7 +3,6 @@ package http
 import (
 	"context"
 	"fmt"
-	"net/http"
 	nethttp "net/http"
 	"os"
 	"os/signal"
@@ -22,6 +21,7 @@ func NewRouter(logger *zap.Logger) *chi.Mux {
 	r.Use(middleware.RealIP)
 	r.Use(mw.NewZapMiddleware("router", logger))
 	r.Use(middleware.AllowContentType("application/json"))
+	r.Use(mw.NewSecureHeadersMiddleware())
 	r.Use(middleware.Recoverer)
 	return r
 }
@@ -59,7 +59,7 @@ func (s Server) Run() {
 
 	s.logger.Info("http-server-listen-and-server")
 	if err := httpServer.ListenAndServe(); err != nil {
-		if err != http.ErrServerClosed {
+		if err != nethttp.ErrServerClosed {
 			s.logger.Error("http-server-listen-and-server-error", zap.Error(err))
 			return
 		}
