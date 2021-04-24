@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/allisson/postmand/compare/v1.1.0...v1.2.0) (2021-04-24)
+
+
+### Features
+
+* **http:** add secure headers using github.com/unrolled/secure ([#28](https://www.github.com/allisson/postmand/issues/28)) ([89a990b](https://www.github.com/allisson/postmand/commit/89a990b1695ffd99356c7d78fd2bef7af5737be7))
+
 ## [1.1.0](https://www.github.com/allisson/postmand/compare/v1.0.0...v1.1.0) (2021-03-10)
 
 
