@@ -30,11 +30,11 @@ To run the server it is necessary to have a database available from postgresql, 
 #### Docker
 
 ```bash
-docker run --rm --env POSTMAND_DATABASE_URL='postgres://user:password@host.docker.internal:5432/postmand?sslmode=disable' allisson/postmand migrate # create database schema
+docker run --rm --env POSTMAND_DATABASE_URL='postgres://user:password@host.docker.internal:5432/postmand?sslmode=disable' quay.io/allisson/postmand migrate # create database schema
 ```
 
 ```bash
-docker run -p 8000:8000 -p 8001:8001 --env POSTMAND_DATABASE_URL='postgres://user:password@host.docker.internal:5432/postmand?sslmode=disable' allisson/postmand server # run the server
+docker run -p 8000:8000 -p 8001:8001 --env POSTMAND_DATABASE_URL='postgres://user:password@host.docker.internal:5432/postmand?sslmode=disable' quay.io/allisson/postmand server # run the server
 ```
 
 #### Local
@@ -54,7 +54,7 @@ The worker is responsible to delivery content to the webhooks.
 #### Docker
 
 ```bash
-docker run --env POSTMAND_DATABASE_URL='postgres://user:pass@host.docker.internal:5432/postmand?sslmode=disable' allisson/postmand worker
+docker run --env POSTMAND_DATABASE_URL='postgres://user:pass@host.docker.internal:5432/postmand?sslmode=disable' quay.io/allisson/postmand worker
 ```
 
 #### Local
