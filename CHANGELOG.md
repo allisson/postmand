@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/allisson/postmand/compare/v1.2.0...v1.3.0) (2021-10-02)
+
+
+### Features
+
+* update project to use golang 1.17.x ([#30](https://www.github.com/allisson/postmand/issues/30)) ([93092fa](https://www.github.com/allisson/postmand/commit/93092faf2fb73d85aa63d49315f3b75f1bf1a875))
+
 ## [1.2.0](https://www.github.com/allisson/postmand/compare/v1.1.0...v1.2.0) (2021-04-24)
 
 
