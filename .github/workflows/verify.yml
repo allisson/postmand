@@ -25,10 +25,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Set up Go 1.16
+      - name: Set up Go 1.17
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: 1.17
         id: go
 
       - name: Check out code into the Go module directory
@@ -49,7 +49,8 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: latest
-          args: -E gosec
+          skip-pkg-cache: true
+          skip-build-cache: true
 
       - name: Run Tests
         env:

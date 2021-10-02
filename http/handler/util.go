@@ -30,8 +30,7 @@ type requestFilters struct {
 func makeResponse(w http.ResponseWriter, body []byte, statusCode int, contentType string, logger *zap.Logger) {
 	w.Header().Set("Content-Type", fmt.Sprintf("%s; charset=utf-8", contentType))
 	w.WriteHeader(statusCode)
-	_, err := w.Write(body)
-	if err != nil {
+	if _, err := w.Write(body); err != nil {
 		logger.Error("http-failed-to-write-response-body", zap.Error(err))
 	}
 }
