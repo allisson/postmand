@@ -2,7 +2,6 @@
 [![Build Status](https://github.com/allisson/postmand/workflows/release/badge.svg)](https://github.com/allisson/postmand/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/allisson/postmand)](https://goreportcard.com/report/github.com/allisson/postmand)
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/allisson/postmand)
-[![Docker Image](https://img.shields.io/docker/cloud/build/allisson/postmand)](https://hub.docker.com/r/allisson/postmand)
 
 Simple webhook delivery system powered by Golang and PostgreSQL.
 
