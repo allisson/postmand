@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://www.github.com/allisson/postmand/compare/v1.3.0...v1.4.0) (2021-11-20)
+
+
+### Features
+
+* **imports:** use goimports from golangci-lint ([#33](https://www.github.com/allisson/postmand/issues/33)) ([6643210](https://www.github.com/allisson/postmand/commit/6643210fd877affb2a319b16a4aea211414fac08))
+
 ## [1.3.0](https://www.github.com/allisson/postmand/compare/v1.2.0...v1.3.0) (2021-10-02)
 
 
