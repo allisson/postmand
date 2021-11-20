@@ -3,10 +3,11 @@ package handler
 import (
 	"net/http"
 
-	"github.com/allisson/postmand"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
 )
 
 type webhookList struct {

@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/allisson/postmand"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/allisson/postmand"
 )
 
 // Webhook implements postmand.WebhookRepository interface.

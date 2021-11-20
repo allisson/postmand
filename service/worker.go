@@ -7,8 +7,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/allisson/postmand"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
 )
 
 // Worker implements postmand.WorkerService interface.

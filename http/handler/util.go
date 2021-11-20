@@ -8,9 +8,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/allisson/postmand"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
 )
 
 type requestFilters struct {

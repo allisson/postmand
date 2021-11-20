@@ -5,13 +5,14 @@ import (
 	nethttp "net/http"
 	"testing"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/http"
-	"github.com/allisson/postmand/mocks"
 	"github.com/google/uuid"
 	"github.com/steinfletcher/apitest"
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
+	"github.com/allisson/postmand/http"
+	"github.com/allisson/postmand/mocks"
 )
 
 func makeDelivery() postmand.Delivery {

@@ -4,9 +4,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/allisson/postmand"
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/jmoiron/sqlx"
+
+	"github.com/allisson/postmand"
 )
 
 func getQuery(tableName string, getOptions postmand.RepositoryGetOptions) (string, []interface{}) {

@@ -3,9 +3,9 @@ PLATFORM := $(shell uname | tr A-Z a-z)
 lint:
 	if [ ! -f ./bin/golangci-lint ] ; \
 	then \
-		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.42.1; \
+		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.43.0; \
 	fi;
-	./bin/golangci-lint run
+	./bin/golangci-lint run --fix
 
 test:
 	go test -covermode=count -coverprofile=count.out -v ./...
@@ -33,6 +33,6 @@ run-worker:
 	go run cmd/postmand/main.go worker
 
 swag-init:
-	swag init -g cmd/postmand/main.go --parseDependency
+	swag init -g cmd/postmand/main.go --parseDependency --parseDepth 2
 
 .PHONY: lint test mock download-golang-migrate-binary db-migrate db-test-migrate run-server run-worker swag-init
