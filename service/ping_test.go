@@ -4,9 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/allisson/postmand/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/allisson/postmand/mocks"
 )
 
 func TestPing(t *testing.T) {

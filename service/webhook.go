@@ -4,8 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/allisson/postmand"
 	"github.com/google/uuid"
+
+	"github.com/allisson/postmand"
 )
 
 // Webhook implements postmand.WebhookService interface.

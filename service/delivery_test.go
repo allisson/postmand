@@ -4,11 +4,12 @@ import (
 	"context"
 	"testing"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/allisson/postmand"
+	"github.com/allisson/postmand/mocks"
 )
 
 func TestDelivery(t *testing.T) {

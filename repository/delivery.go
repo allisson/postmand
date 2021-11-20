@@ -11,10 +11,11 @@ import (
 	"net/http/httputil"
 	"time"
 
-	"github.com/allisson/postmand"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
+
+	"github.com/allisson/postmand"
 )
 
 type dispatchResponse struct {

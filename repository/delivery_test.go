@@ -7,9 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/allisson/postmand"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/allisson/postmand"
 )
 
 func makeDelivery() postmand.Delivery {

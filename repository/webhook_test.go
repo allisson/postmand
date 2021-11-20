@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/allisson/postmand"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/allisson/postmand"
 )
 
 func makeWebhook() postmand.Webhook {

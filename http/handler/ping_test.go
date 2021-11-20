@@ -5,11 +5,12 @@ import (
 	nethttp "net/http"
 	"testing"
 
-	"github.com/allisson/postmand/http"
-	"github.com/allisson/postmand/mocks"
 	"github.com/steinfletcher/apitest"
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand/http"
+	"github.com/allisson/postmand/mocks"
 )
 
 func TestPing(t *testing.T) {

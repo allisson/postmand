@@ -6,10 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/mocks"
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
+	"github.com/allisson/postmand/mocks"
 )
 
 func TestWorker(t *testing.T) {

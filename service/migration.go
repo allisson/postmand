@@ -3,8 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/allisson/postmand"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
 )
 
 // Migration implements postmand.MigrationService interface.

@@ -3,8 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/allisson/postmand"
 	"go.uber.org/zap"
+
+	"github.com/allisson/postmand"
 )
 
 type pingResponse struct {

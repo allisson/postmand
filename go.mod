@@ -5,19 +5,19 @@ go 1.17
 require (
 	github.com/DATA-DOG/go-txdb v0.1.4
 	github.com/allisson/go-env v0.3.0
-	github.com/go-chi/chi/v5 v5.0.4
+	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
-	github.com/golang-migrate/migrate/v4 v4.15.0
+	github.com/golang-migrate/migrate/v4 v4.15.1
 	github.com/google/uuid v1.3.0
 	github.com/huandu/go-sqlbuilder v1.13.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/joho/godotenv v1.4.0
 	github.com/jpillora/backoff v1.0.0
-	github.com/lib/pq v1.10.3
+	github.com/lib/pq v1.10.4
 	github.com/steinfletcher/apitest v1.5.11
 	github.com/stretchr/testify v1.7.0
-	github.com/swaggo/http-swagger v1.1.1
-	github.com/swaggo/swag v1.7.3
+	github.com/swaggo/http-swagger v1.1.2
+	github.com/swaggo/swag v1.7.4
 	github.com/unrolled/secure v1.0.9
 	github.com/urfave/cli/v2 v2.3.0
 	go.uber.org/zap v1.19.1
@@ -28,7 +28,7 @@ require (
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.5 // indirect
@@ -46,9 +46,9 @@ require (
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/net v0.0.0-20210520170846-37e1c6afe023 // indirect
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/net v0.0.0-20211013171255-e13a2654a71e // indirect
+	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
+	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.5 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

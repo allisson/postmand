@@ -6,17 +6,18 @@ import (
 	"time"
 
 	"github.com/allisson/go-env"
-	_ "github.com/allisson/postmand/docs"
-	"github.com/allisson/postmand/http"
-	"github.com/allisson/postmand/http/handler"
-	"github.com/allisson/postmand/repository"
-	"github.com/allisson/postmand/service"
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
+
+	_ "github.com/allisson/postmand/docs"
+	"github.com/allisson/postmand/http"
+	"github.com/allisson/postmand/http/handler"
+	"github.com/allisson/postmand/repository"
+	"github.com/allisson/postmand/service"
 )
 
 func healthcheckServer(db *sqlx.DB, logger *zap.Logger) {
