@@ -1,5 +1,5 @@
 #### development stage
-FROM golang:1.17-buster AS builder
+FROM golang:1.19 AS builder
 
 # set envvar
 ENV CGO_ENABLED=0

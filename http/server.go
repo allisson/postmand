@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -29,14 +30,19 @@ func NewRouter(logger *zap.Logger) *chi.Mux {
 
 // Server implements a http server.
 type Server struct {
-	mux      *chi.Mux
-	httpPort int
-	logger   *zap.Logger
+	mux               *chi.Mux
+	httpPort          int
+	readHeaderTimeout time.Duration
+	logger            *zap.Logger
 }
 
 // Run starts a http server.
 func (s Server) Run() {
-	httpServer := &nethttp.Server{Addr: fmt.Sprintf(":%d", s.httpPort), Handler: s.mux}
+	httpServer := &nethttp.Server{
+		Addr:              fmt.Sprintf(":%d", s.httpPort),
+		Handler:           s.mux,
+		ReadHeaderTimeout: s.readHeaderTimeout,
+	}
 	idleConnsClosed := make(chan struct{})
 	go func() {
 		sigint := make(chan os.Signal, 1)
@@ -72,8 +78,9 @@ func (s Server) Run() {
 // NewServer creates a new Server.
 func NewServer(mux *chi.Mux, httpPort int, logger *zap.Logger) *Server {
 	return &Server{
-		mux:      mux,
-		httpPort: httpPort,
-		logger:   logger,
+		mux:               mux,
+		httpPort:          httpPort,
+		readHeaderTimeout: time.Second * 60,
+		logger:            logger,
 	}
 }
