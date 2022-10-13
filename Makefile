@@ -3,7 +3,7 @@ PLATFORM := $(shell uname | tr A-Z a-z)
 lint:
 	if [ ! -f ./bin/golangci-lint ] ; \
 	then \
-		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.43.0; \
+		curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.0; \
 	fi;
 	./bin/golangci-lint run --fix
 
