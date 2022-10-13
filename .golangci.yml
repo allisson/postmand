@@ -1,9 +1,6 @@
 linters:
   enable:
     - gosec
-    - rowserrcheck
-    - sqlclosecheck
-    - ifshort
     - goimports
 linters-settings:
   goimports:
