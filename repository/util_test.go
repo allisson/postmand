@@ -2,7 +2,6 @@ package repository
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"time"
 
@@ -13,7 +12,8 @@ import (
 
 func init() {
 	txdb.Register("pgx", "postgres", os.Getenv("POSTMAND_TEST_DATABASE_URL"))
-	rand.Seed(time.Now().UnixNano())
+	//NewRand(NewSource(seed))
+	//rand.Seed(time.Now().UnixNano())
 }
 
 type testHelper struct {
