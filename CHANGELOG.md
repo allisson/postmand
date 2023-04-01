@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/allisson/postmand/compare/v1.5.0...v1.6.0) (2023-04-01)
+
+
+### Features
+
+* update to golang 1.20 ([#40](https://github.com/allisson/postmand/issues/40)) ([aa74366](https://github.com/allisson/postmand/commit/aa743668a09c46c57dff7a590601f50082134def))
+
 ## [1.5.0](https://github.com/allisson/postmand/compare/v1.4.0...v1.5.0) (2022-10-13)
 
 
