@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/allisson/postmand/compare/v1.6.0...v1.7.0) (2023-04-01)
+
+
+### Features
+
+* update swagger files ([#42](https://github.com/allisson/postmand/issues/42)) ([24f72f1](https://github.com/allisson/postmand/commit/24f72f1756a3ead7b44409220b60226f3fffccff))
+
 ## [1.6.0](https://github.com/allisson/postmand/compare/v1.5.0...v1.6.0) (2023-04-01)
 
 
