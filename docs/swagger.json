@@ -693,7 +693,7 @@
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer"
+                    "$ref": "#/definitions/handler.errorResponseCode"
                 },
                 "details": {
                     "type": "string"
@@ -766,6 +766,27 @@
                     }
                 }
             }
+        },
+        "handler.errorResponseCode": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ],
+            "x-enum-varnames": [
+                "internalServerErrorCode",
+                "invalidIDCode",
+                "malformedRequestBodyCode",
+                "requestValidationFailedCode",
+                "webhookNotFoundCode",
+                "deliveryNotFoundCode",
+                "deliveryAttemptNotFoundCode"
+            ]
         }
     }
 }

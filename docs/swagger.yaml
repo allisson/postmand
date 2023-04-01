@@ -67,7 +67,7 @@ definitions:
   Error:
     properties:
       code:
-        type: integer
+        $ref: '#/definitions/handler.errorResponseCode'
       details:
         type: string
       message:
@@ -115,6 +115,24 @@ definitions:
           $ref: '#/definitions/Webhook'
         type: array
     type: object
+  handler.errorResponseCode:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    type: integer
+    x-enum-varnames:
+    - internalServerErrorCode
+    - invalidIDCode
+    - malformedRequestBodyCode
+    - requestValidationFailedCode
+    - webhookNotFoundCode
+    - deliveryNotFoundCode
+    - deliveryAttemptNotFoundCode
 info:
   contact: {}
   description: Simple webhook delivery system powered by Golang and PostgreSQL.
