@@ -7,7 +7,7 @@ on:
 
 jobs:
   verify:
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/verify.yml
 
   release-please:
     needs: verify
