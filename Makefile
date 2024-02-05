@@ -1,5 +1,7 @@
 PLATFORM := $(shell uname | tr A-Z a-z)
 
+include .env
+
 lint:
 	if [ ! -f ./bin/golangci-lint ] ; \
 	then \
