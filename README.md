@@ -42,8 +42,9 @@ docker run -p 8000:8000 -p 8001:8001 --env POSTMAND_DATABASE_URL='postgres://use
 git clone https://github.com/allisson/postmand
 cd postmand
 cp local.env .env # and edit .env
-make run-migrate # create database schema
+make db-migrate # create database schema
 make run-server # run the server
+make run-worker
 ```
 
 ###  Run the worker
