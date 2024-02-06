@@ -7,6 +7,9 @@ on:
       - "**"
       - "!main"
 
+env:
+  POSTMAND_TEST_DATABASE_URL: "postgres://user:pass@localhost:5432/postmand_test?sslmode=disable"
+
 jobs:
   verify:
     name: Test
@@ -15,9 +18,9 @@ jobs:
       postgres:
         image: postgres:12-alpine
         env:
-          POSTGRES_DB: postmand
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
+          POSTGRES_DB: postmand_test
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: pass
         ports:
           - 5432:5432
         options: >-
@@ -26,10 +29,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Set up Go 1.20
+      - name: Set up Go 1.21
         uses: actions/setup-go@v4
         with:
-          go-version: "1.20"
+          go-version: "1.21"
         id: go
 
       - name: Check out code into the Go module directory
@@ -53,7 +56,8 @@ jobs:
           skip-pkg-cache: true
           skip-build-cache: true
 
+      - name: Install just
+        run: sudo snap install --edge --classic just
+
       - name: Run Tests
-        env:
-          POSTMAND_TEST_DATABASE_URL: "postgres://test:test@localhost:5432/postmand?sslmode=disable"
-        run: make db-test-migrate && go test -covermode=count -coverprofile=count.out -v ./...
+        run: just db-test-migrate && just test
