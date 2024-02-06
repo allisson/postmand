@@ -26,6 +26,10 @@ Let's start with the basic concepts, we have three main entities that we must kn
 
 To run the server it is necessary to have a database available from postgresql, in this example we will consider that we have a database called postmand running in localhost with user and password equal to user.
 
+```bash
+docker run --name postgres --restart unless-stopped -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=postmand -p 5432:5432 -d postgres:12-alpine
+```
+
 #### Docker
 
 ```bash
@@ -38,13 +42,15 @@ docker run -p 8000:8000 -p 8001:8001 --env POSTMAND_DATABASE_URL='postgres://use
 
 #### Local
 
+Install just command runner: https://github.com/casey/just?tab=readme-ov-file#installation
+
 ```bash
 git clone https://github.com/allisson/postmand
 cd postmand
 cp local.env .env # and edit .env
-make db-migrate # create database schema
-make run-server # run the server
-make run-worker
+just db-migrate # create database schema
+just run-server # run the server
+just run-worker
 ```
 
 ###  Run the worker
@@ -60,7 +66,7 @@ docker run --env POSTMAND_DATABASE_URL='postgres://user:pass@host.docker.interna
 #### Local
 
 ```bash
-make run-worker
+just run-worker
 go run cmd/postmand/main.go worker
 ```
 
