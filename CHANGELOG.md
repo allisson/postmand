@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://github.com/allisson/postmand/compare/v1.7.0...v1.8.0) (2024-02-06)
+
+
+### Features
+
+* replace make commands with just ([#46](https://github.com/allisson/postmand/issues/46)) ([4e34293](https://github.com/allisson/postmand/commit/4e342938cd3b138e66f4b1952de6e6b0867bb4ae))
+
+
+### Bug Fixes
+
+* 44 Makefile not loading env vars for db migration ([#45](https://github.com/allisson/postmand/issues/45)) ([4402a0c](https://github.com/allisson/postmand/commit/4402a0cc49a96e13f5679582494e52edd5b55292))
+
 ## [1.7.0](https://github.com/allisson/postmand/compare/v1.6.0...v1.7.0) (2023-04-01)
 
 
