@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", $POSTGRES_DB]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migrate:
+    image: quay.io/allisson/postmand
+    environment:
+      POSTMAND_DATABASE_URL: ${POSTMAND_DATABASE_URL}
+    command: migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  worker:
+    image: quay.io/allisson/postmand
+    environment:
+      POSTMAND_DATABASE_URL: ${POSTMAND_DATABASE_URL}
+      POSTMAND_POLLING_INTERVAL: ${POSTMAND_POLLING_INTERVAL}
+      POSTMAND_DATABASE_MAX_OPEN_CONNS: ${POSTMAND_DATABASE_MAX_OPEN_CONNS}
+    command: worker
+    ports:
+      - "8100:8000"
+      - "8101:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  server:
+    image: quay.io/allisson/postmand
+    environment:
+      POSTMAND_DATABASE_URL: ${POSTMAND_DATABASE_URL}
+      POSTMAND_DATABASE_MAX_OPEN_CONNS: ${POSTMAND_DATABASE_MAX_OPEN_CONNS}
+    command: server
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
