@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS webhooks(
    content_type VARCHAR NOT NULL,
    valid_status_codes SMALLINT[] NOT NULL,
    secret_token VARCHAR NOT NULL,
+   authorization VARCHAR NOT NULL,
    active BOOLEAN NOT NULL,
    max_delivery_attempts SMALLINT NOT NULL,
    delivery_attempt_timeout SMALLINT NOT NULL,

@@ -29,6 +29,7 @@ type Webhook struct {
 	ContentType            string        `json:"content_type" db:"content_type"`
 	ValidStatusCodes       pq.Int32Array `json:"valid_status_codes" db:"valid_status_codes"`
 	SecretToken            string        `json:"secret_token" db:"secret_token"`
+	Authorization          string        `json:"authorization" db:"authorization"`
 	Active                 bool          `json:"active" db:"active"`
 	MaxDeliveryAttempts    int           `json:"max_delivery_attempts" db:"max_delivery_attempts"`
 	DeliveryAttemptTimeout int           `json:"delivery_attempt_timeout" db:"delivery_attempt_timeout"`
