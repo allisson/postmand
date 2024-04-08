@@ -4,7 +4,6 @@ services:
   postgres:
     image: postgres:16-alpine
     restart: unless-stopped
-    user: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,7 +13,7 @@ services:
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "postgres"]
+      test: ["CMD-SHELL", "pg_isready", "-d", $POSTGRES_DB]
       interval: 10s
       timeout: 5s
       retries: 5
