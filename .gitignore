@@ -25,3 +25,4 @@ migrate.linux-amd64
 
 # dot env
 .env
+postgres_data
