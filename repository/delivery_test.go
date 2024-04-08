@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 func makeDelivery() postmand.Delivery {

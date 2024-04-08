@@ -13,11 +13,11 @@ import (
 	"github.com/urfave/cli/v2"
 	"go.uber.org/zap"
 
-	_ "github.com/allisson/postmand/docs"
-	"github.com/allisson/postmand/http"
-	"github.com/allisson/postmand/http/handler"
-	"github.com/allisson/postmand/repository"
-	"github.com/allisson/postmand/service"
+	_ "github.com/crypitor/postmand/docs"
+	"github.com/crypitor/postmand/http"
+	"github.com/crypitor/postmand/http/handler"
+	"github.com/crypitor/postmand/repository"
+	"github.com/crypitor/postmand/service"
 )
 
 func healthcheckServer(db *sqlx.DB, logger *zap.Logger) {

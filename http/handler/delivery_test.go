@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/http"
-	"github.com/allisson/postmand/mocks"
+	"github.com/crypitor/postmand"
+	"github.com/crypitor/postmand/http"
+	"github.com/crypitor/postmand/mocks"
 )
 
 func makeDelivery() postmand.Delivery {

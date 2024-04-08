@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 type deliveryAttemptList struct {

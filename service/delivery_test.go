@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/mocks"
+	"github.com/crypitor/postmand"
+	"github.com/crypitor/postmand/mocks"
 )
 
 func TestDelivery(t *testing.T) {

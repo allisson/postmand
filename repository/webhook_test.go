@@ -9,7 +9,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 func makeWebhook() postmand.Webhook {

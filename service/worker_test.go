@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand"
-	"github.com/allisson/postmand/mocks"
+	"github.com/crypitor/postmand"
+	"github.com/crypitor/postmand/mocks"
 )
 
 func TestWorker(t *testing.T) {

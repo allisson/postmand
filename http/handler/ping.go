@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 type pingResponse struct {

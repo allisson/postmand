@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	postmand "github.com/allisson/postmand"
+	postmand "github.com/crypitor/postmand"
 	mock "github.com/stretchr/testify/mock"
 )
 

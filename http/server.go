@@ -13,7 +13,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
 
-	mw "github.com/allisson/postmand/http/middleware"
+	mw "github.com/crypitor/postmand/http/middleware"
 )
 
 // NewRouter returns *chi.Mux with base middlewares.

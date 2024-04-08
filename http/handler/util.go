@@ -11,7 +11,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 type requestFilters struct {

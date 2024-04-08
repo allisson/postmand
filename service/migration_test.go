@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"go.uber.org/zap"
 
-	"github.com/allisson/postmand/mocks"
+	"github.com/crypitor/postmand/mocks"
 )
 
 func TestMigration(t *testing.T) {

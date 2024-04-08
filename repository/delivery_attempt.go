@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 // DeliveryAttempt implements postmand.DeliveryAttemptRepository interface.

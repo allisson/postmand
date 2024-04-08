@@ -15,7 +15,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/jpillora/backoff"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 type dispatchResponse struct {

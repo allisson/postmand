@@ -7,7 +7,7 @@ import (
 	"github.com/huandu/go-sqlbuilder"
 	"github.com/jmoiron/sqlx"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 func getQuery(tableName string, getOptions postmand.RepositoryGetOptions) (string, []interface{}) {

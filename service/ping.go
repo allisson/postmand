@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 // Ping implements postmand.PingService interface.

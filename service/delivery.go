@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/allisson/postmand"
+	"github.com/crypitor/postmand"
 )
 
 // Delivery implements postmand.DeliveryService interface.
