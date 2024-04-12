@@ -1,0 +1,20 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
+  release-please:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login registry.gitlab.com -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker build -f Dockerfile --target registry.gitlab.com/${{ secrets.DOCKER_USERNAME }}/postmand:latest .
+          docker push registry.gitlab.com/${{ secrets.DOCKER_USERNAME }}/postmand:latest
