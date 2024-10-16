@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/allisson/postmand/compare/v1.8.0...v1.8.1) (2024-10-16)
+
+
+### Bug Fixes
+
+* update dependencies ([#51](https://github.com/allisson/postmand/issues/51)) ([7beebc5](https://github.com/allisson/postmand/commit/7beebc5c3b385c63ddd92fea849ebb58b640f1bf))
+
 ## [1.8.0](https://github.com/allisson/postmand/compare/v1.7.0...v1.8.0) (2024-02-06)
 
 
